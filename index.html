@@ -65,7 +65,14 @@ header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;backgroun
 nav.links{display:flex;gap:4px 18px;flex-wrap:wrap;margin-left:auto}
 nav.links a{text-decoration:none;color:var(--ink-2);font-size:14px;padding:6px 0}
 nav.links a:hover{color:var(--ink)}
-@media (max-width:760px){ nav.links{display:none} }
+html{scroll-padding-top:72px}
+@media (max-width:760px){
+  html{scroll-padding-top:96px}
+  .top .wrap{gap:0;min-height:52px;padding-top:8px}
+  nav.links{flex-wrap:nowrap;overflow-x:auto;width:100%;margin:0;padding:2px 0 6px;gap:20px;scrollbar-width:none;-webkit-overflow-scrolling:touch;mask-image:linear-gradient(90deg,#000 88%,transparent)}
+  nav.links::-webkit-scrollbar{display:none}
+  nav.links a{white-space:nowrap;padding:8px 0}
+}
 
 /* hero */
 .hero{position:relative;overflow:hidden;border-bottom:1px solid var(--line)}
@@ -141,6 +148,7 @@ figcaption{color:var(--ink-3);font-size:13.5px;line-height:1.5;margin-top:12px;m
 .note{color:var(--ink-3);font-size:13.5px;margin-top:18px;max-width:70ch}
 
 /* validation */
+.valgrid > *, .speedgrid > *, .specs > *, .start > *, .gallery > *, .card > *{min-width:0}
 .valgrid{display:grid;grid-template-columns:1.25fr 1fr;gap:clamp(24px,4vw,48px);align-items:start}
 @media (max-width:940px){ .valgrid{grid-template-columns:1fr} }
 .figframe{background:#fff;border-radius:10px;padding:10px;border:1px solid var(--line)}
