@@ -1,0 +1,620 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tellus Geotechnical FE</title>
+<meta name="description" content="Tellus 2D and Tellus3D: plane-strain and three-dimensional geotechnical finite element programs built for AI agents, with a GPU solver and published benchmarks.">
+<link rel="icon" href="assets/tellus-favicon.png">
+<link rel="apple-touch-icon" href="assets/tellus-logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@112,500;112,700;125,800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  color-scheme: dark;
+  --ground:#121418; --surface:#1a1d23; --raise:#22262e; --line:#2f343d;
+  --ink:#ebe6db; --ink-2:#b9b3a6; --ink-3:#857f73;
+  --sand:#e2b462; --clay:#8c6b3c; --cyan:#56cfe1; --deep:#1f5fd0;
+  --ok:#6fcf97; --warn:#e8a33d;
+  --display:"Archivo", "Helvetica Neue", Arial, sans-serif;
+  --body:"IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono:"IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --wrap:1180px;
+}
+@media (prefers-color-scheme: light){
+  :root:not([data-theme="dark"]){
+    color-scheme: light;
+    --ground:#f1f2ef; --surface:#ffffff; --raise:#e7e8e3; --line:#d3d5ce;
+    --ink:#1b1e23; --ink-2:#4a4e55; --ink-3:#6f737a;
+    --sand:#a8711c; --clay:#7a5a2c; --cyan:#127e94; --deep:#1b54b8;
+    --ok:#2e8b57; --warn:#b06d0a;
+  }
+}
+:root[data-theme="light"]{
+  color-scheme: light;
+  --ground:#f1f2ef; --surface:#ffffff; --raise:#e7e8e3; --line:#d3d5ce;
+  --ink:#1b1e23; --ink-2:#4a4e55; --ink-3:#6f737a;
+  --sand:#a8711c; --clay:#7a5a2c; --cyan:#127e94; --deep:#1b54b8;
+  --ok:#2e8b57; --warn:#b06d0a;
+}
+:root[data-theme="dark"]{ color-scheme: dark; }
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto} }
+body{margin:0;background:var(--ground);color:var(--ink);font:400 16px/1.6 var(--body);-webkit-font-smoothing:antialiased}
+img{max-width:100%;height:auto;display:block}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--cyan);outline-offset:3px;border-radius:4px}
+.wrap{max-width:var(--wrap);margin:0 auto;padding-inline:clamp(16px,4vw,40px)}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;letter-spacing:-.01em}
+h2{font-size:clamp(28px,3.6vw,42px);font-stretch:112%;font-weight:700;line-height:1.1}
+h3{font-size:20px;font-stretch:112%;font-weight:700;line-height:1.25}
+p{margin:0}
+.lede{color:var(--ink-2);max-width:62ch;font-size:17px}
+.label{font:500 12px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--sand)}
+.mono{font-family:var(--mono)}
+.num{font-variant-numeric:tabular-nums}
+
+/* header */
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:color-mix(in srgb,var(--ground) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;align-items:center;gap:24px;min-height:60px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;font:800 19px/1 var(--display);font-stretch:125%;letter-spacing:.02em}
+.brand img{width:34px;height:34px}
+nav.links{display:flex;gap:4px 18px;flex-wrap:wrap;margin-left:auto}
+nav.links a{text-decoration:none;color:var(--ink-2);font-size:14px;padding:6px 0}
+nav.links a:hover{color:var(--ink)}
+@media (max-width:760px){ nav.links{display:none} }
+
+/* hero */
+.hero{position:relative;overflow:hidden;border-bottom:1px solid var(--line)}
+.hero canvas{position:absolute;inset:0;width:100%;height:100%}
+.hero .veil{position:absolute;inset:0;background:linear-gradient(90deg,var(--ground) 0%,color-mix(in srgb,var(--ground) 82%,transparent) 42%,transparent 78%)}
+.hero .wrap{position:relative;padding-block:clamp(56px,9vw,110px) clamp(48px,7vw,84px)}
+.hero h1{font-size:clamp(36px,5.2vw,64px);font-weight:800;font-stretch:125%;line-height:1;max-width:16ch;letter-spacing:-.02em}
+.hero h1 em{font-style:normal;color:var(--sand)}
+.hero .lede{margin-top:22px;font-size:clamp(16px,1.6vw,19px);max-width:52ch}
+.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:30px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 18px;border-radius:8px;text-decoration:none;font:600 15px/1 var(--body);border:1px solid var(--line);background:var(--surface);color:var(--ink)}
+.btn.primary{background:var(--sand);color:#17130b;border-color:transparent}
+.btn:hover{filter:brightness(1.08)}
+.legend{position:relative;margin-top:44px;display:flex;align-items:center;gap:12px;color:var(--ink-3);font:400 12px/1.3 var(--mono)}
+.legend .ramp{width:120px;height:8px;border-radius:2px;background:linear-gradient(90deg,#d9a75a,#56cfe1,#1f5fd0)}
+
+/* facts strip */
+.facts{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--line)}
+.facts div{padding:22px clamp(16px,2.4vw,28px);border-right:1px solid var(--line)}
+.facts div:last-child{border-right:0}
+.facts b{display:block;font:800 clamp(24px,3vw,34px)/1 var(--display);font-stretch:112%;font-variant-numeric:tabular-nums}
+.facts span{display:block;margin-top:8px;color:var(--ink-2);font-size:14px;line-height:1.35}
+@media (max-width:760px){ .facts{grid-template-columns:1fr 1fr} .facts div:nth-child(2){border-right:0} .facts div:nth-child(-n+2){border-bottom:1px solid var(--line)} }
+
+section{padding-block:clamp(64px,9vw,110px)}
+.head{display:grid;gap:14px;margin-bottom:40px;max-width:760px}
+
+/* programs: spec sheet */
+.specs{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media (max-width:860px){ .specs{grid-template-columns:1fr} }
+.spec{background:var(--surface);border:1px solid var(--line);border-radius:10px;overflow:hidden;display:flex;flex-direction:column}
+.spec .title{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:22px 24px 16px;border-bottom:1px solid var(--line)}
+.spec .title h3{font-size:26px;font-stretch:125%;font-weight:800}
+.spec .title .tag{font:500 12px/1 var(--mono);color:var(--cyan);letter-spacing:.08em;text-transform:uppercase}
+.spec dl{margin:0;display:grid;grid-template-columns:minmax(96px,30%) 1fr}
+.spec dt,.spec dd{margin:0;padding:12px 24px;border-bottom:1px solid var(--line);font-size:14.5px;line-height:1.5}
+.spec dt{color:var(--ink-3);font:500 12px/1.5 var(--mono);letter-spacing:.06em;text-transform:uppercase;padding-top:14px;padding-right:8px}
+.spec dd{color:var(--ink-2)}
+.spec dl > :nth-last-child(-n+2){border-bottom:0}
+.strata{height:6px;background:linear-gradient(180deg,var(--sand) 0 30%,var(--clay) 30% 65%,color-mix(in srgb,var(--clay) 55%,var(--ground)) 65%)}
+.spec .strata{margin-top:auto}
+
+/* workflow */
+.flow{display:grid;grid-template-columns:repeat(5,1fr);gap:0;counter-reset:s;border-top:1px solid var(--line)}
+.flow li{list-style:none;padding:22px 18px 0 0;position:relative}
+.flow li::before{counter-increment:s;content:counter(s);display:block;font:500 12px/1 var(--mono);color:var(--sand);margin-bottom:14px}
+.flow li b{display:block;font:700 17px/1.25 var(--display);font-stretch:112%;margin-bottom:6px}
+.flow li span{color:var(--ink-2);font-size:14.5px;line-height:1.5;display:block}
+.flow li .who{display:inline-block;margin-top:10px;font:500 11px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)}
+.flow{padding:0;margin:0}
+@media (max-width:900px){ .flow{grid-template-columns:1fr 1fr} .flow li{padding-bottom:22px;border-bottom:1px solid var(--line)} }
+@media (max-width:480px){ .flow{grid-template-columns:1fr} }
+figure{margin:0}
+figcaption{color:var(--ink-3);font-size:13.5px;line-height:1.5;margin-top:12px;max-width:80ch}
+.shot{margin-top:48px}
+.shot img{border-radius:10px;border:1px solid var(--line)}
+
+/* speed */
+.speed{background:var(--surface);border-block:1px solid var(--line)}
+.bars{display:grid;gap:18px;margin-top:8px}
+.bar{display:grid;grid-template-columns:150px 1fr 90px;align-items:center;gap:14px;font-size:14px}
+.bar .t{height:18px;border-radius:3px;background:var(--raise);overflow:hidden}
+.bar .t i{display:block;height:100%;background:var(--ink-3)}
+.bar.gpu .t i{background:var(--cyan)}
+.bar .v{font-family:var(--mono);text-align:right;font-variant-numeric:tabular-nums}
+@media (max-width:560px){ .bar{grid-template-columns:96px 1fr 66px;font-size:13px} }
+.speedgrid{display:grid;grid-template-columns:1.1fr 1fr;gap:clamp(28px,5vw,64px);align-items:start}
+@media (max-width:900px){ .speedgrid{grid-template-columns:1fr} }
+.big{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.big div{background:var(--surface);padding:20px}
+.big b{display:block;font:800 clamp(28px,3.4vw,40px)/1 var(--display);font-stretch:112%;color:var(--ink);font-variant-numeric:tabular-nums}
+.big span{display:block;margin-top:10px;color:var(--ink-2);font-size:14px;line-height:1.45}
+.note{color:var(--ink-3);font-size:13.5px;margin-top:18px;max-width:70ch}
+
+/* validation */
+.valgrid{display:grid;grid-template-columns:1.25fr 1fr;gap:clamp(24px,4vw,48px);align-items:start}
+@media (max-width:940px){ .valgrid{grid-template-columns:1fr} }
+.figframe{background:#fff;border-radius:10px;padding:10px;border:1px solid var(--line)}
+table{border-collapse:collapse;width:100%;font-size:14px}
+.tablebox{overflow-x:auto}
+th,td{text-align:left;padding:10px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:500 11.5px/1.3 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);font-weight:500}
+td.r{font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.pill{display:inline-block;padding:3px 8px;border-radius:999px;font:500 11.5px/1.2 var(--mono);white-space:nowrap}
+.pill.ok{background:color-mix(in srgb,var(--ok) 18%,transparent);color:var(--ok)}
+.pill.warn{background:color-mix(in srgb,var(--warn) 18%,transparent);color:var(--warn)}
+.sub{font-size:13px;color:var(--ink-3);margin:26px 0 8px;font-family:var(--mono);letter-spacing:.08em;text-transform:uppercase}
+
+/* gallery */
+.gallery{display:grid;grid-template-columns:repeat(6,1fr);gap:18px}
+.gallery figure{background:var(--surface);border:1px solid var(--line);border-radius:10px;overflow:hidden;display:flex;flex-direction:column}
+.gallery figure img{width:100%;aspect-ratio:16/10;object-fit:cover;background:#fff}
+.gallery figure.w3{grid-column:span 3}
+.gallery figure.w2{grid-column:span 2}
+.gallery figure.w4{grid-column:span 4}
+.gallery figcaption{padding:14px 16px 16px;margin:0;color:var(--ink-2)}
+.gallery figcaption b{display:block;color:var(--ink);font:700 15px/1.3 var(--display);font-stretch:112%;margin-bottom:4px}
+.gallery .kind{font:500 11px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--cyan);display:block;margin-bottom:8px}
+@media (max-width:900px){ .gallery{grid-template-columns:1fr 1fr} .gallery figure.w3,.gallery figure.w2,.gallery figure.w4{grid-column:span 2} }
+@media (min-width:560px) and (max-width:900px){ .gallery figure.half{grid-column:span 1} }
+
+/* get started */
+.start{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media (max-width:860px){ .start{grid-template-columns:1fr} }
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:24px;display:grid;gap:14px;align-content:start}
+.card p{color:var(--ink-2);font-size:15px}
+.code{position:relative;background:var(--ground);border:1px solid var(--line);border-radius:8px}
+.code pre{margin:0;padding:14px 16px;padding-right:76px;overflow-x:auto;font:400 13px/1.6 var(--mono);color:var(--ink)}
+.code .c{color:var(--ink-3)}
+.copy{position:absolute;top:8px;right:8px;font:500 12px/1 var(--mono);padding:7px 10px;border-radius:6px;border:1px solid var(--line);background:var(--surface);color:var(--ink-2);cursor:pointer}
+.copy:hover{color:var(--ink)}
+.req{display:flex;flex-wrap:wrap;gap:8px}
+.req span{font:500 12px/1 var(--mono);padding:7px 10px;border-radius:6px;background:var(--raise);color:var(--ink-2)}
+
+/* papers + footer */
+.papers{display:grid;gap:0;border-top:1px solid var(--line)}
+.paper{display:grid;grid-template-columns:120px 1fr auto;gap:18px;padding:22px 0;border-bottom:1px solid var(--line);align-items:baseline}
+.paper .yr{font:500 13px/1.4 var(--mono);color:var(--ink-3)}
+.paper h3{font-size:18px}
+.paper p{color:var(--ink-2);font-size:14.5px;margin-top:6px;max-width:75ch}
+.paper .st{font:500 12px/1 var(--mono);color:var(--sand);white-space:nowrap}
+a.st{text-decoration:none}
+a.st:hover{text-decoration:underline}
+.lede a{color:var(--sand)}
+@media (max-width:700px){ .paper{grid-template-columns:1fr;gap:6px} }
+footer{border-top:1px solid var(--line);padding-block:36px 48px;color:var(--ink-3);font-size:14px}
+footer .wrap{display:flex;flex-wrap:wrap;gap:16px 40px;justify-content:space-between}
+footer strong{color:var(--ink-2);font-weight:600}
+.disclaim{max-width:60ch}
+/* motion */
+@media (prefers-reduced-motion: no-preference){
+  @supports (animation-timeline: view()){
+    .head, .spec, .flow li, .shot, .big, .valgrid > *, .gallery figure, .card, .paper{
+      animation: rise linear both; animation-timeline: view(); animation-range: entry 0% entry 55%;
+    }
+    @keyframes rise{ from{ opacity:.25; transform:translateY(22px) } to{ opacity:1; transform:none } }
+    .flow{ position:relative }
+    .flow::after{ content:""; position:absolute; left:0; top:-1px; height:2px; width:100%; background:var(--sand); transform-origin:left;
+      animation: draw linear both; animation-timeline: view(); animation-range: entry 20% cover 45% }
+    @keyframes draw{ from{ transform:scaleX(0) } to{ transform:scaleX(1) } }
+  }
+  @supports (animation-timeline: view()){
+    .bars .t i{ transform-origin:left; animation: grow linear both; animation-timeline: view(); animation-range: entry 40% cover 40% }
+    @keyframes grow{ from{ transform:scaleX(0) } to{ transform:scaleX(1) } }
+  }
+  .spec, .card, .gallery figure{ transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease }
+  .spec:hover, .card:hover, .gallery figure:hover{ transform:translateY(-3px); border-color:color-mix(in srgb,var(--sand) 45%,var(--line)); box-shadow:0 10px 28px -14px rgba(0,0,0,.45) }
+  .gallery figure img{ transition: transform .6s ease }
+  .gallery figure:hover img{ transform:scale(1.035) }
+  .btn{ transition: transform .15s ease, filter .15s ease }
+  .btn:hover{ transform:translateY(-1px) }
+  .hero h1, .hero .lede, .hero .actions, .hero .label{ animation: hin .9s cubic-bezier(.2,.7,.2,1) both }
+  .hero .lede{ animation-delay:.08s } .hero .actions{ animation-delay:.16s }
+  @keyframes hin{ from{ opacity:.35; transform:translateY(14px) } to{ opacity:1; transform:none } }
+}
+.hero{ cursor:crosshair }
+.hero .wrap{ cursor:auto }
+
+.contact{display:inline-flex;align-items:center;gap:10px;margin-top:6px}
+.contact a{color:var(--sand);text-decoration:none;font-size:15px}
+.contact a:hover{text-decoration:underline}
+.copy.inline{position:static}
+.offer{display:grid;grid-template-columns:1fr auto;gap:20px 40px;align-items:center;margin-bottom:24px;padding:24px 26px;border-radius:10px;border:1px solid color-mix(in srgb,var(--sand) 55%,var(--line));background:color-mix(in srgb,var(--sand) 9%,var(--surface))}
+.offer h3{font-size:21px;margin-bottom:8px}
+.offer p{color:var(--ink-2);font-size:15px;max-width:68ch}
+.offer-mail{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.offer-mail a{color:var(--sand);font-size:17px;text-decoration:none;font-weight:500}
+.offer-mail a:hover{text-decoration:underline}
+@media (max-width:760px){ .offer{grid-template-columns:1fr} }
+</style>
+</head>
+<body>
+
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#top"><img src="assets/tellus-logo.png" alt="" width="34" height="34">TELLUS</a>
+    <nav class="links" aria-label="Sections">
+      <a href="#programs">Programs</a>
+      <a href="#agent">Agent workflow</a>
+      <a href="#speed">GPU speed</a>
+      <a href="#validation">Validation</a>
+      <a href="#cases">Cases</a>
+      <a href="#start">Get started</a>
+      <a href="#papers">Papers</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+<div class="hero">
+  <canvas id="mesh" aria-hidden="true"></canvas>
+  <div class="veil"></div>
+  <div class="wrap">
+    <p class="label">Geotechnical finite element analysis for AI agents</p>
+    <h1 style="margin-top:18px">Ground models an agent builds and an <em>engineer checks</em></h1>
+    <p class="lede">Tellus 2D and Tellus3D are plane-strain and three-dimensional FE programs for soil, written in Rust. An AI agent drives them through Model Context Protocol tools: it builds the soil profile, structures and construction stages, calculates, reads results and writes the report. The engineer opens the same project in the desktop app and checks every step.</p>
+    <div class="actions">
+      <a class="btn primary" href="https://github.com/Sompote/Tellus/releases" target="_blank" rel="noopener">Download Tellus 2D</a>
+      <a class="btn" href="#licence">Trial or academic licence</a>
+      <a class="btn" href="#validation">See the benchmarks</a>
+    </div>
+    <div class="legend"><span class="ramp"></span><span>|u| under a strip footing on sand over clay, 15-node triangles</span></div>
+  </div>
+</div>
+
+<div class="facts wrap" style="max-width:none;padding:0">
+  <div><b class="num">33 / 30</b><span>MCP tools in Tellus 2D / Tellus3D</span></div>
+  <div><b class="num">82</b><span>verification tests in the 2D solver, all passing</span></div>
+  <div><b class="num">64×</b><span>faster factorisation on an RTX 4090 than 25 CPU cores</span></div>
+  <div><b class="num">±4.3 %</b><span>factors of safety against tutorial problems of an established FE program</span></div>
+</div>
+
+<section id="programs">
+  <div class="wrap">
+    <div class="head">
+      <p class="label">Two programs, one way of working</p>
+      <h2>Plane strain for everyday design, 3D where the geometry demands it</h2>
+      <p class="lede">Both programs share the soil models, the agent tools and the project-file approach, so a model that starts as a section can grow into a three-dimensional analysis with the same parameters.</p>
+    </div>
+    <div class="specs">
+      <article class="spec">
+        <div class="title"><h3>Tellus 2D</h3><span class="tag">plane strain</span></div>
+        <dl>
+          <dt>Elements</dt><dd>15-node cubic-strain triangles, or structured 25-node rectangles</dd>
+          <dt>Soil models</dt><dd>Linear elastic, Mohr–Coulomb (drained, undrained A, B, C), Hardening Soil and HS small, Soft Soil and Soft Soil Creep, hypoplastic sand</dd>
+          <dt>Structures</dt><dd>Elastic and elastoplastic plates with interfaces, geogrids, embedded piles, spring supports for struts and anchors</dd>
+          <dt>Analyses</dt><dd>K0 or gravity loading, staged construction, Biot consolidation, steady flow, vacuum preloading, φ–c reduction</dd>
+          <dt>Agent</dt><dd>33 MCP tools via <span class="mono">tellus --mcp</span>; chat panel in English or Thai</dd>
+          <dt>Runs on</dt><dd>macOS and Windows builds, 37 MB download, 73 MB idle; GPU solver on a cloud box</dd>
+        </dl>
+        <div class="strata"></div>
+      </article>
+      <article class="spec">
+        <div class="title"><h3>Tellus3D</h3><span class="tag">three-dimensional</span></div>
+        <dl>
+          <dt>Elements</dt><dd>10-node tetrahedra; meshes follow layer surfaces interpolated between boreholes</dd>
+          <dt>Soil models</dt><dd>Linear elastic, Mohr–Coulomb, Hardening Soil and HS small, Soft Soil and Soft Soil Creep, drained or undrained</dd>
+          <dt>Structures</dt><dd>Shell plates with interfaces, embedded piles, TBM tunnels dug ring by ring with face pressure, shield, grout and lining</dd>
+          <dt>Analyses</dt><dd>Staged construction, coupled consolidation, PVDs and vacuum, φ–c reduction, measured pore pressure profiles</dd>
+          <dt>Agent</dt><dd>30 MCP tools via <span class="mono">tellus3d --mcp</span>, or over HTTP from a GPU server</dd>
+          <dt>Runs on</dt><dd>Desktop app on this computer; <span class="mono">tellus3d-server</span> with cuDSS on an NVIDIA GPU</dd>
+        </dl>
+        <div class="strata"></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="agent" style="padding-top:0">
+  <div class="wrap">
+    <div class="head">
+      <p class="label">Agent workflow</p>
+      <h2>The agent does the modelling, the engineer keeps the judgement</h2>
+      <p class="lede">Every model edit is an undoable step on a project file the engineer can open. The agent reports only the numbers the tools returned, and writes its assumptions and limits into the report.</p>
+    </div>
+    <ol class="flow">
+      <li><b>Set the problem</b><span>Describe the site, the structure and the code check in words, a sketch or a borehole log.</span><em class="who">engineer</em></li>
+      <li><b>Build the model</b><span>Soil layers, materials, plates, piles, tunnels and phases through typed MCP tools.</span><em class="who">agent</em></li>
+      <li><b>Calculate</b><span>On this computer, or on a rented GPU that one command starts and stops.</span><em class="who">solver</em></li>
+      <li><b>Report</b><span>Deformed meshes, contours and a PDF report with the model, phases and notes.</span><em class="who">agent</em></li>
+      <li><b>Check and decide</b><span>Open the same project, inspect the results and correct anything that is wrong.</span><em class="who">engineer</em></li>
+    </ol>
+    <figure class="shot">
+      <img src="assets/tellus2d-app.jpg" alt="Tellus 2D app with the agent panel: a slope checked to Eurocode 7 under normal water and rapid drawdown, with factors of safety of at least 1.585 and 1.917" width="1600" height="827" loading="lazy">
+      <figcaption>Tellus 2D with its TigrimOS agent. For a slope under normal water and drawdown the agent ran two safety phases (ΣMsf ≥ 1.585 and ≥ 1.917, both above the 1.25 of EC7), wrote the PDF report and showed the failure mechanisms in the chat.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section id="speed" class="speed">
+  <div class="wrap speedgrid">
+    <div>
+      <div class="head" style="margin-bottom:28px">
+        <p class="label">GPU solver</p>
+        <h2>Fine meshes on a rented card</h2>
+        <p class="lede">The stiffness matrix is factorised in double precision with NVIDIA cuDSS. The same binary falls back to a multithreaded supernodal solver when no GPU is present.</p>
+      </div>
+      <p class="sub">One factorisation, 275,520 equations (3D embankment)</p>
+      <div class="bars">
+        <div class="bar"><span>25 CPU cores</span><div class="t"><i style="width:100%"></i></div><span class="v">242 s</span></div>
+        <div class="bar gpu"><span>RTX 4090</span><div class="t"><i style="width:1.53%;min-width:3px"></i></div><span class="v">3.7 s</span></div>
+      </div>
+      <p class="note">CPU time is the mean of the measured 237–248 s. The whole analysis gains less than the factorisation, about 19 times, because the stress updates still run on the CPU.</p>
+    </div>
+    <div class="big">
+      <div><b>14.4 min</b><span>10-year embankment on Bangkok soft clay, HS small with coupled consolidation, 13 phases</span></div>
+      <div><b>225 s</b><span>EPB tunnel drive, Ø 6.6 m, 15 rings, 333,000 equations, 17 phases from one tool call</span></div>
+      <div><b>1.8 h</b><span>All 30 analyses of the Tellus 2D calibration, one after another on one RTX 4090</span></div>
+      <div><b>30×</b><span>faster factorisation on an A100 than 16 CPU cores for a TBM drive of 76,000 equations</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="validation">
+  <div class="wrap">
+    <div class="head">
+      <p class="label">Validation</p>
+      <h2>Checked against closed forms, an established FE program and the field</h2>
+      <p class="lede">The calibration of Tellus 2D runs every model headless through the agent tools with published parameters and no tuning. The figure plots every result as the ratio of Tellus 2D to its reference; the grey band is ±10 %. The full paper is on <a href="https://zenodo.org/records/23550829" target="_blank" rel="noopener">Zenodo</a>.</p>
+    </div>
+    <div class="valgrid">
+      <figure>
+        <div class="figframe"><img src="assets/tellus2d-benchmarks.jpg" alt="Dot plot of 52 benchmark results as ratios to their references, grouped by application, with wall times of 30 GPU runs" width="1520" height="1040" loading="lazy"></div>
+        <figcaption>Tellus 2D calibration: (a) each result divided by its reference, by application and kind of reference; (b) wall time of each run on an RTX 4090 against the size of its largest system of equations.</figcaption>
+      </figure>
+      <div>
+        <div class="tablebox">
+        <table>
+          <thead><tr><th>Benchmark</th><th>Tellus 2D</th><th>Reference</th><th></th></tr></thead>
+          <tbody>
+            <tr><td>Verification suite, closed form and reference FE</td><td class="r">14 results</td><td class="r">within 4 %</td><td><span class="pill ok">pass</span></td></tr>
+            <tr><td>Tutorial embankment lessons, factors of safety</td><td class="r">1.13–1.83</td><td class="r">within 4.3 %</td><td><span class="pill ok">agree</span></td></tr>
+            <tr><td>Sukhumvit 21 m excavation, max. wall deflection</td><td class="r">40.7 mm</td><td class="r">36 mm</td><td><span class="pill ok">+13 %</span></td></tr>
+            <tr><td>Suvarnabhumi TV2 vacuum + PVD, settlement at 145 d</td><td class="r">0.979 m</td><td class="r">0.97 m</td><td><span class="pill ok">+1 %</span></td></tr>
+            <tr><td>Muar embankment raised to failure</td><td class="r">4.07–4.33 m</td><td class="r">5.5 m</td><td><span class="pill warn">early</span></td></tr>
+            <tr><td>Soil-cement columns, final settlement</td><td class="r">0.11–0.34 m</td><td class="r">0.03–0.54 m</td><td><span class="pill ok">in scatter</span></td></tr>
+          </tbody>
+        </table>
+        </div>
+        <p class="sub">Tellus3D benchmarks</p>
+        <div class="tablebox">
+        <table>
+          <tbody>
+            <tr><td>Soft Soil column, 8 m NC clay under 50 kPa</td><td class="r">363.9 mm</td><td class="r">361.7 mm</td></tr>
+            <tr><td>Griffiths and Lane slope, factor of safety</td><td class="r">1.36–1.39</td><td class="r">1.376 (Bishop)</td></tr>
+            <tr><td>Terzaghi consolidation, degree of consolidation</td><td class="r">±0.008</td><td class="r">series solution</td></tr>
+            <tr><td>Hardening Soil column, 10 m NC sand</td><td class="r">30.46 mm</td><td class="r">30.39 mm</td></tr>
+          </tbody>
+        </table>
+        </div>
+        <p class="note">The Muar embankment fails 1.2–1.4 m early in both programs, most likely because the Soft Soil model fails on the Mohr–Coulomb surface, which is weaker in plane strain than the Cam-clay model of the original analysis. The column settlements fall in the field scatter with the source's column modulus of 20 MPa, and are two to four times too small with E = 100 q<sub>u</sub>.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="cases" style="padding-top:0">
+  <div class="wrap">
+    <div class="head">
+      <p class="label">Case histories</p>
+      <h2>Soft clay, tunnels and deep excavations</h2>
+    </div>
+    <div class="gallery">
+      <figure class="w3 half"><img src="assets/tellus3d-tunnel.jpg" alt="3D section through an EPB tunnel after 15 rings, vertical displacement and excess pore pressure" width="912" height="524" loading="lazy">
+        <figcaption><span class="kind">Tellus3D</span><b>EPB tunnel drive, ring by ring</b>Ø 6.6 m at 20 m depth in Bangkok clay, Hardening Soil with shield contraction; vertical displacement and excess pore pressure after ring 15.</figcaption></figure>
+      <figure class="w3 half"><img src="assets/tellus3d-embankment.jpg" alt="3D embankment on soft clay, vertical displacement after 10 years, up to 490 mm" width="655" height="591" loading="lazy">
+        <figcaption><span class="kind">Tellus3D</span><b>Embankment on soft clay, 10 years</b>2.5 m fill in two lifts with coupled consolidation; settlement up to 490 mm, solved on an RTX 4090.</figcaption></figure>
+      <figure class="w4"><img src="assets/tellus2d-field-meshes.jpg" alt="Deformed meshes of the Sukhumvit excavation, the Muar embankment and the TV2 vacuum trial" width="1520" height="520" loading="lazy" style="aspect-ratio:auto;object-fit:contain">
+        <figcaption><span class="kind">Tellus 2D</span><b>Three field benchmarks</b>Sukhumvit MRT station excavation, the Muar trial embankment raised to failure, and the TV2 vacuum-preloading trial at day 145.</figcaption></figure>
+      <figure class="w2"><img src="assets/tellus2d-columns.jpg" alt="Deformed mesh of an embankment on soil-cement column walls" width="1190" height="600" loading="lazy">
+        <figcaption><span class="kind">Tellus 2D</span><b>Soil-cement columns</b>Lian-Yun-Gang expressway: column grid as plane-strain walls under a 3.5 m fill.</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<section id="start" class="speed">
+  <div class="wrap">
+    <div class="head">
+      <p class="label">Get started</p>
+      <h2>Install the app, then connect your agent</h2>
+    </div>
+    <div class="offer" id="licence">
+      <div>
+        <h3>Try Tellus, or use it free for teaching and research</h3>
+        <p>We offer trial licences, and free academic licences for universities, students and non-commercial research. Email us with your name, organisation and how you plan to use Tellus 2D or Tellus3D.</p>
+      </div>
+      <div class="offer-mail">
+        <a class="mono" href="mailto:tellusfem@gmail.com?subject=Tellus%20licence%20request" id="mail2">tellusfem@gmail.com</a>
+        <button class="copy inline" id="copymail2" type="button">Copy</button>
+      </div>
+    </div>
+    <div class="start">
+      <div class="card">
+        <h3>Tellus 2D</h3>
+        <p>Ready-built apps for macOS (universal, macOS 11 or later) and 64-bit Windows are on the GitHub releases page. They are not signed by a registered developer, so macOS needs right-click → Open the first time.</p>
+        <div class="req"><span>37 MB download</span><span>73 MB idle</span><span>~85 MB per 1,000 elements</span><span>4 GB RAM is enough</span></div>
+        <div class="code"><pre id="c1"><span class="c"># register the headless MCP server with Claude Code</span>
+claude mcp add -s user tellus -- /path/to/tellus --mcp</pre><button class="copy" data-for="c1" type="button">Copy</button></div>
+        <div class="actions" style="margin-top:4px"><a class="btn primary" href="https://github.com/Sompote/Tellus/releases" target="_blank" rel="noopener">Releases on GitHub</a></div>
+      </div>
+      <div class="card">
+        <h3>Tellus3D</h3>
+        <p>Build from source with Cargo; the app, the solver, the headless server and the TigrimOS agent build from one workspace. One script rents a cloud GPU, starts the compute server and points the app at it.</p>
+        <div class="code"><pre id="c2">cargo build --release
+target/release/tellus3d --mcp            <span class="c"># MCP on stdin/stdout</span>
+cloud/vast_gpu.sh up                     <span class="c"># rent a GPU, start the server</span>
+cloud/vast_gpu.sh down                   <span class="c"># destroy the box</span></pre><button class="copy" data-for="c2" type="button">Copy</button></div>
+        <p style="font-size:14px">The source is available on request from <span class="mono" style="user-select:all">tellusfem@gmail.com</span>. The formulation and benchmarks are in the <a href="https://zenodo.org/records/23551608" target="_blank" rel="noopener" style="color:var(--sand)">Tellus3D paper on Zenodo</a>.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="papers">
+  <div class="wrap">
+    <div class="head">
+      <p class="label">Papers</p>
+      <h2>Formulation and calibration</h2>
+    </div>
+    <div class="papers">
+      <div class="paper"><span class="yr">2026 · preprint</span><div><h3>Calibration of Tellus 2D, an agent-driven plane-strain geotechnical finite element program</h3><p>82 verification tests, three tutorial lessons of an established FE program and four case histories in soft clay, run through the MCP server; four defects found and fixed; 30 analyses in 1.8 hours on one RTX 4090.</p></div><a class="st" href="https://zenodo.org/records/23550829" target="_blank" rel="noopener">Zenodo record ↗</a></div>
+      <div class="paper"><span class="yr">2026 · preprint</span><div><h3>Tellus3D: GPU-accelerated three-dimensional geotechnical finite element analysis designed for AI agents</h3><p>Formulation, architecture and verification benchmarks of the 3D program, with the embankment and EPB tunnel cases on a cloud GPU.</p></div><a class="st" href="https://zenodo.org/records/23551608" target="_blank" rel="noopener">Zenodo record ↗</a></div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer id="contact">
+  <div class="wrap">
+    <div><strong>Contact</strong><br>Trials, free academic licences, source requests and collaboration<br><span class="contact"><a class="mono" href="mailto:tellusfem@gmail.com" id="mail">tellusfem@gmail.com</a><button class="copy inline" id="copymail" type="button">Copy</button></span></div>
+    <p class="disclaim">Tellus is version 0.1 research software. Results depend on the model and its parameters and must be checked by a qualified engineer before they are used in design.</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  // copy buttons
+  document.querySelectorAll('.copy').forEach(function(b){
+    b.addEventListener('click', function(){
+      var el = document.getElementById(b.dataset.for);
+      var text = el.innerText.split('\n').filter(function(l){return l.trim() && l.trim()[0] !== '#';}).map(function(l){return l.replace(/\s+#.*$/,'');}).join('\n');
+      function done(){ b.textContent = 'Copied'; setTimeout(function(){ b.textContent = 'Copy'; }, 1500); }
+      function select(){ var r = document.createRange(); r.selectNodeContents(el); var s = getSelection(); s.removeAllRanges(); s.addRange(r); b.textContent = 'Selected'; setTimeout(function(){ b.textContent = 'Copy'; }, 1500); }
+      try { navigator.clipboard.writeText(text).then(done, select); } catch(e){ select(); }
+    });
+  });
+
+  // copy the contact address
+  var cm2 = document.getElementById('copymail2');
+  cm2.addEventListener('click', function(){
+    function done(){ cm2.textContent = 'Copied'; setTimeout(function(){ cm2.textContent = 'Copy'; }, 1500); }
+    function select(){ var r = document.createRange(); r.selectNodeContents(document.getElementById('mail2')); var s = getSelection(); s.removeAllRanges(); s.addRange(r); }
+    try { navigator.clipboard.writeText('tellusfem@gmail.com').then(done, select); } catch(e){ select(); }
+  });
+  var cm = document.getElementById('copymail');
+  cm.addEventListener('click', function(){
+    var t = 'tellusfem@gmail.com';
+    function done(){ cm.textContent = 'Copied'; setTimeout(function(){ cm.textContent = 'Copy'; }, 1500); }
+    function select(){ var r = document.createRange(); r.selectNodeContents(document.getElementById('mail')); var s = getSelection(); s.removeAllRanges(); s.addRange(r); }
+    try { navigator.clipboard.writeText(t).then(done, select); } catch(e){ select(); }
+  });
+
+  // hero: a triangulated two-layer soil mesh under a strip footing, coloured by |u|
+  var cv = document.getElementById('mesh'), ctx = cv.getContext('2d');
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var nodes = [], tris = [], W = 0, H = 0, cols = 0, rows = 0;
+  var home = function(){ return innerWidth > 760 ? 0.74 : 0.62; }, xf = home(), xt = xf;
+  function rnd(i, j){ var s = Math.sin(i * 127.1 + j * 311.7) * 43758.5453; return s - Math.floor(s); }
+  function build(){
+    var r = cv.getBoundingClientRect(), dpr = Math.min(devicePixelRatio || 1, 2);
+    W = r.width; H = r.height; cv.width = W * dpr; cv.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    var h = Math.max(26, Math.min(44, W / 32));
+    cols = Math.ceil(W / h) + 2; rows = Math.ceil(H / (h * 0.866)) + 2;
+    nodes = []; tris = [];
+    for (var j = 0; j < rows; j++) for (var i = 0; i < cols; i++) {
+      var x = (i - 1 + (j % 2) * 0.5) * h + (rnd(i, j) - 0.5) * h * 0.38;
+      var y = (j - 1) * h * 0.866 + (rnd(j, i) - 0.5) * h * 0.3;
+      // the rows nearest the ground surface and the top of the clay lie on those lines
+      var yr = (j - 1) * h * 0.866;
+      if (Math.abs(yr - H * 0.24) < h * 0.433) y = H * 0.24;
+      if (Math.abs(yr - H * 0.62) < h * 0.433) y = H * 0.62;
+      nodes.push([x, y]);
+    }
+    for (var j = 0; j < rows - 1; j++) for (var i = 0; i < cols - 1; i++) {
+      var a = j * cols + i, b = a + 1, c = a + cols, d = c + 1;
+      if (j % 2 === 0) { tris.push([a, b, c]); tris.push([b, d, c]); } else { tris.push([a, b, d]); tris.push([a, d, c]); }
+    }
+  }
+  function field(x, y, load){
+    // ground at 24 % of the height, footing over the right part of the canvas
+    var g = H * 0.24, x0 = W * xf, B = Math.max(70, W * 0.08);
+    if (y < g) return -1;
+    var z = (y - g) / B, dx = (x - x0) / B;
+    return load * Math.exp(-(dx * dx) / (2 * (1 + 0.9 * z) * (1 + 0.9 * z))) / (1 + 0.45 * z * z);
+  }
+  var css = getComputedStyle(document.documentElement);
+  function draw(load){
+    ctx.clearRect(0, 0, W, H);
+    var g = H * 0.24, clayTop = H * 0.62, x0 = W * xf, B = Math.max(70, W * 0.08);
+    var amp = B * 0.22;
+    function disp(p){ var u = field(p[0], p[1], load); if (u < 0) return p; var dx = (p[0] - x0) / B; return [p[0] + amp * u * dx * 0.12, p[1] + amp * u]; }
+    for (var t = 0; t < tris.length; t++) {
+      var q = tris[t], p0 = nodes[q[0]], p1 = nodes[q[1]], p2 = nodes[q[2]];
+      var cx = (p0[0] + p1[0] + p2[0]) / 3, cy = (p0[1] + p1[1] + p2[1]) / 3;
+      if (cy < g - 0.5) continue;
+      var u = Math.max(0, field(cx, cy, load));
+      var base = cy < clayTop ? [217, 167, 90] : [128, 98, 56];
+      // ramp: soil colour -> cyan -> deep blue as |u| grows
+      var c1 = [86, 207, 225], c2 = [31, 95, 208], col;
+      if (u < 0.5) { var k = u / 0.5; col = base.map(function(v, i){ return v + (c1[i] - v) * k; }); }
+      else { var k = (u - 0.5) / 0.5; col = c1.map(function(v, i){ return v + (c2[i] - v) * k; }); }
+      var a = disp(p0), b = disp(p1), c = disp(p2);
+      ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.lineTo(c[0], c[1]); ctx.closePath();
+      ctx.fillStyle = 'rgba(' + col.map(Math.round).join(',') + ',0.92)'; ctx.fill();
+      ctx.strokeStyle = 'rgba(255,255,255,0.28)'; ctx.lineWidth = 0.7; ctx.stroke();
+    }
+    // the footing
+    var fy = g + amp * field(x0, g + 0.01, load) - 14;
+    ctx.fillStyle = 'rgba(214,216,220,0.95)'; ctx.fillRect(x0 - B * 0.55, fy, B * 1.1, 14);
+  }
+  // the footing settles once, then follows the pointer along the ground and the load breathes
+  var hero = document.querySelector('.hero'), start = null, t0 = null, running = false, visible = true, last = 0;
+  function loadAt(ts){
+    var k = Math.min(1, (ts - start) / 1800), e = 1 - Math.pow(1 - k, 3);
+    var breathe = k < 1 ? 0 : 0.06 * Math.sin((ts - start - 1800) / 1100);
+    return 0.25 + 0.75 * e - Math.abs(breathe);
+  }
+  function frame(ts){
+    if (start === null) start = ts;
+    xf += (xt - xf) * 0.06;
+    draw(loadAt(ts));
+    if (visible && !document.hidden) requestAnimationFrame(frame); else running = false;
+  }
+  function run(){ if (!running && !reduce) { running = true; requestAnimationFrame(frame); } }
+  hero.addEventListener('pointermove', function(e){
+    var r = hero.getBoundingClientRect(), f = (e.clientX - r.left) / r.width;
+    xt = Math.max(0.12, Math.min(0.9, f));
+  });
+  hero.addEventListener('pointerleave', function(){ xt = home(); });
+  if ('IntersectionObserver' in window) new IntersectionObserver(function(es){ visible = es[0].isIntersecting; if (visible) run(); }).observe(hero);
+  document.addEventListener('visibilitychange', function(){ if (!document.hidden) run(); });
+  function go(){ build(); if (reduce) draw(1); else { draw(0.25); run(); } }
+  go();
+  var to; addEventListener('resize', function(){ clearTimeout(to); to = setTimeout(function(){ xt = xf = home(); build(); if (reduce) draw(1); }, 150); });
+
+  // big numbers count up once when they come into view (they show their final values until then)
+  if (!reduce && 'IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function(es){
+      es.forEach(function(en){
+        if (!en.isIntersecting) return;
+        io.unobserve(en.target);
+        var el = en.target, txt = el.textContent, m = txt.match(/[0-9][0-9.,]*/);
+        if (!m) return;
+        var end = parseFloat(m[0].replace(/,/g, '')), dec = (m[0].split('.')[1] || '').length, t1 = null;
+        function step(ts){
+          if (t1 === null) t1 = ts;
+          var k = Math.min(1, (ts - t1) / 1100), e = 1 - Math.pow(1 - k, 3);
+          el.textContent = txt.replace(m[0], (end * e).toFixed(dec));
+          if (k < 1) requestAnimationFrame(step); else el.textContent = txt;
+        }
+        requestAnimationFrame(step);
+      });
+    }, {threshold: 0.6});
+    document.querySelectorAll('.big b, .facts b').forEach(function(b){ if (!/\//.test(b.textContent)) io.observe(b); });
+  }
+})();
+</script>
+
+</body>
+</html>
