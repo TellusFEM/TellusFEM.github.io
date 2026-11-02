@@ -1,0 +1,409 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tellus 2D Manual</title>
+<meta name="description" content="User manual of Tellus 2D: installing, the free academic edition and licence keys, building and calculating a model, the chat assistant, and connecting Claude Code, Claude Desktop or Codex through MCP.">
+<link rel="icon" href="assets/tellus-favicon.png">
+<link rel="apple-touch-icon" href="assets/tellus-logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@112,500;112,700;125,800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  color-scheme: dark;
+  --ground:#121418; --surface:#1a1d23; --raise:#22262e; --line:#2f343d;
+  --ink:#ebe6db; --ink-2:#b9b3a6; --ink-3:#857f73;
+  --sand:#e2b462; --clay:#8c6b3c; --cyan:#56cfe1; --deep:#1f5fd0;
+  --ok:#6fcf97; --warn:#e8a33d;
+  --display:"Archivo", "Helvetica Neue", Arial, sans-serif;
+  --body:"IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono:"IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --wrap:1180px;
+}
+@media (prefers-color-scheme: light){
+  :root:not([data-theme="dark"]){
+    color-scheme: light;
+    --ground:#f1f2ef; --surface:#ffffff; --raise:#e7e8e3; --line:#d3d5ce;
+    --ink:#1b1e23; --ink-2:#4a4e55; --ink-3:#6f737a;
+    --sand:#a8711c; --clay:#7a5a2c; --cyan:#127e94; --deep:#1b54b8;
+    --ok:#2e8b57; --warn:#b06d0a;
+  }
+}
+:root[data-theme="light"]{
+  color-scheme: light;
+  --ground:#f1f2ef; --surface:#ffffff; --raise:#e7e8e3; --line:#d3d5ce;
+  --ink:#1b1e23; --ink-2:#4a4e55; --ink-3:#6f737a;
+  --sand:#a8711c; --clay:#7a5a2c; --cyan:#127e94; --deep:#1b54b8;
+  --ok:#2e8b57; --warn:#b06d0a;
+}
+:root[data-theme="dark"]{ color-scheme: dark; }
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:76px}
+@media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto} }
+body{margin:0;background:var(--ground);color:var(--ink);font:400 16px/1.65 var(--body);-webkit-font-smoothing:antialiased}
+img{max-width:100%;height:auto;display:block}
+a{color:var(--sand)}
+:focus-visible{outline:2px solid var(--cyan);outline-offset:3px;border-radius:4px}
+.wrap{max-width:var(--wrap);margin:0 auto;padding-inline:clamp(16px,4vw,40px)}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;letter-spacing:-.01em}
+h1{font-size:clamp(34px,4.6vw,54px);font-weight:800;font-stretch:125%;line-height:1.02}
+h2{font-size:clamp(24px,2.8vw,32px);font-stretch:112%;font-weight:700;line-height:1.15;margin-top:8px}
+h3{font-size:18px;font-stretch:112%;font-weight:700;line-height:1.3;margin:28px 0 8px}
+p{margin:0 0 14px}
+.label{font:500 12px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--sand)}
+.mono,code{font-family:var(--mono)}
+code{font-size:.88em;background:var(--raise);padding:1px 6px;border-radius:4px;overflow-wrap:anywhere}
+/* header */
+header.top{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--ground) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;align-items:center;gap:24px;min-height:60px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);font:800 19px/1 var(--display);font-stretch:125%;letter-spacing:.02em}
+.brand img{width:34px;height:34px}
+.brand small{font:500 12px/1 var(--mono);letter-spacing:.1em;color:var(--ink-3);text-transform:uppercase;margin-left:4px}
+nav.links{display:flex;gap:4px 18px;flex-wrap:wrap;margin-left:auto}
+nav.links a{text-decoration:none;color:var(--ink-2);font-size:14px;padding:6px 0}
+nav.links a:hover{color:var(--ink)}
+/* intro */
+.intro{border-bottom:1px solid var(--line);padding-block:clamp(44px,7vw,80px) clamp(32px,5vw,52px)}
+.intro .lede{color:var(--ink-2);max-width:66ch;font-size:clamp(16px,1.5vw,18px);margin-top:18px}
+.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:11px 16px;border-radius:8px;text-decoration:none;font:600 14.5px/1 var(--body);border:1px solid var(--line);background:var(--surface);color:var(--ink)}
+.btn.primary{background:var(--sand);color:#17130b;border-color:transparent}
+.btn:hover{filter:brightness(1.08)}
+/* layout: contents beside the text */
+.doc{display:grid;grid-template-columns:230px minmax(0,1fr);gap:clamp(28px,4vw,56px);padding-block:40px 80px}
+@media (max-width:900px){ .doc{grid-template-columns:1fr} }
+.toc{position:sticky;top:84px;align-self:start;font-size:14px}
+.toc ol{list-style:none;margin:10px 0 0;padding:0;counter-reset:c;border-left:1px solid var(--line)}
+.toc li{counter-increment:c}
+.toc a{display:block;padding:6px 0 6px 14px;margin-left:-1px;border-left:2px solid transparent;color:var(--ink-2);text-decoration:none;line-height:1.35}
+.toc a::before{content:counter(c) ". ";color:var(--ink-3);font-family:var(--mono);font-size:12px}
+.toc a:hover,.toc a.on{color:var(--ink);border-left-color:var(--sand)}
+@media (max-width:900px){
+  .toc{position:static;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px 18px}
+  .toc ol{columns:2;column-gap:20px;border-left:0}
+  .toc a{padding-left:0;border-left:0}
+}
+@media (max-width:480px){ .toc ol{columns:1} }
+article{min-width:0;max-width:78ch}
+article section{padding-bottom:36px;margin-bottom:36px;border-bottom:1px solid var(--line)}
+article section:last-child{border-bottom:0}
+article p, article li{color:var(--ink-2)}
+article strong{color:var(--ink);font-weight:600}
+article ul, article ol.steps{padding-left:22px;margin:0 0 16px}
+article li{margin-bottom:6px}
+ol.steps{counter-reset:s;list-style:none;padding-left:0 !important}
+ol.steps > li{counter-increment:s;position:relative;padding-left:38px;margin-bottom:12px}
+ol.steps > li::before{content:counter(s);position:absolute;left:0;top:1px;width:24px;height:24px;border-radius:50%;background:var(--raise);color:var(--sand);font:500 12px/24px var(--mono);text-align:center}
+figure{margin:20px 0 24px}
+figure img{border-radius:10px;border:1px solid var(--line)}
+figcaption{color:var(--ink-3);font-size:13.5px;line-height:1.5;margin-top:10px}
+.tablebox{overflow-x:auto;margin:6px 0 18px;border:1px solid var(--line);border-radius:10px}
+table{border-collapse:collapse;width:100%;font-size:14.5px}
+th,td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:0}
+th{font:500 11.5px/1.3 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);background:var(--surface)}
+td{color:var(--ink-2)}
+td:first-child{color:var(--ink);font-weight:500}
+.code{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:8px;margin:8px 0 18px}
+.code pre{margin:0;padding:14px 16px;padding-right:78px;overflow-x:auto;font:400 13px/1.6 var(--mono);color:var(--ink)}
+.code .c{color:var(--ink-3)}
+.code .tag{position:absolute;top:-9px;left:12px;font:500 10.5px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;background:var(--ground);color:var(--ink-3);padding:2px 6px;border-radius:4px}
+.copy{position:absolute;top:8px;right:8px;font:500 12px/1 var(--mono);padding:7px 10px;border-radius:6px;border:1px solid var(--line);background:var(--raise);color:var(--ink-2);cursor:pointer}
+.copy:hover{color:var(--ink)}
+.tabs{display:flex;gap:4px;flex-wrap:wrap;margin:14px 0 0}
+.tabs button{font:500 13px/1 var(--body);padding:9px 14px;border-radius:8px 8px 0 0;border:1px solid var(--line);border-bottom:0;background:var(--raise);color:var(--ink-2);cursor:pointer}
+.tabs button[aria-selected="true"]{background:var(--surface);color:var(--ink)}
+.panel{border:1px solid var(--line);border-radius:0 10px 10px 10px;background:var(--surface);padding:18px 20px 6px;margin-bottom:18px}
+.panel[hidden]{display:none}
+.panel .code{background:var(--ground)}
+.note{border-left:3px solid var(--sand);background:color-mix(in srgb,var(--sand) 8%,var(--surface));padding:12px 16px;border-radius:0 8px 8px 0;margin:6px 0 18px;font-size:15px;color:var(--ink-2)}
+.note.warn{border-left-color:var(--warn);background:color-mix(in srgb,var(--warn) 8%,var(--surface))}
+.note p:last-child{margin-bottom:0}
+.flowline{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 18px;padding:0;list-style:none}
+.flowline li{font:500 12.5px/1 var(--mono);padding:8px 11px;border-radius:6px;background:var(--raise);color:var(--ink);margin:0}
+.flowline li + li::before{content:"→";color:var(--ink-3);margin-right:8px}
+.toolgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:6px;margin:8px 0 18px}
+.toolgrid code{display:block;padding:6px 8px;font-size:12.5px}
+footer{border-top:1px solid var(--line);padding-block:30px 44px;color:var(--ink-3);font-size:14px}
+footer .wrap{display:flex;flex-wrap:wrap;gap:12px 32px;justify-content:space-between}
+@media (max-width:760px){
+  .top .wrap{gap:0;min-height:52px;padding-top:8px}
+  nav.links{flex-wrap:nowrap;overflow-x:auto;width:100%;margin:0;padding:2px 0 6px;gap:20px;scrollbar-width:none}
+  nav.links::-webkit-scrollbar{display:none}
+  nav.links a{white-space:nowrap;padding:8px 0}
+  html{scroll-padding-top:100px}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="index.html"><img src="assets/tellus-logo.png" alt="" width="34" height="34">TELLUS<small>2D manual</small></a>
+    <nav class="links" aria-label="Site">
+      <a href="index.html">Home</a>
+      <a href="index.html#start">Download</a>
+      <a href="index.html#conditions">Conditions</a>
+      <a href="index.html#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<div class="intro">
+  <div class="wrap">
+    <p class="label">User manual · Tellus 2D 0.1.2</p>
+    <h1 style="margin-top:16px">How to use Tellus 2D</h1>
+    <p class="lede">This manual takes you from the download to a calculated model, and then shows how to let an AI assistant drive Tellus: the chat assistant inside the program, or Claude Code, Claude Desktop and Codex through the Model Context Protocol (MCP). Everything here works in the free academic edition, within its limits.</p>
+    <div class="actions">
+      <a class="btn primary" href="downloads/Tellus-0.1.2-macos-universal.dmg" download>Academic download · macOS</a>
+      <a class="btn primary" href="downloads/Tellus-0.1.2-windows-x64.zip" download>Academic download · Windows</a>
+      <a class="btn" href="#mcp">Jump to MCP set-up</a>
+    </div>
+  </div>
+</div>
+
+<div class="wrap doc">
+  <nav class="toc" aria-label="Contents">
+    <span class="label">Contents</span>
+    <ol>
+      <li><a href="#install">Install</a></li>
+      <li><a href="#start">First start: free edition or key</a></li>
+      <li><a href="#workspace">The workspace</a></li>
+      <li><a href="#first-model">Your first model</a></li>
+      <li><a href="#results">Reading the results</a></li>
+      <li><a href="#chat">The chat assistant</a></li>
+      <li><a href="#mcp">Claude Code, Codex and MCP</a></li>
+      <li><a href="#cli">Command-line options</a></li>
+      <li><a href="#trouble">Troubleshooting</a></li>
+    </ol>
+  </nav>
+
+  <article>
+    <section id="install">
+      <p class="label">1</p>
+      <h2>Install</h2>
+      <p>Tellus 2D is one desktop program of about 40 MB that runs entirely on your computer. It needs macOS 11 or later (Intel or Apple Silicon) or 64-bit Windows 10 or 11, and 4 GB of memory is enough for ordinary models.</p>
+      <div class="tablebox"><table>
+        <tr><th>System</th><th>File</th><th>How to install</th></tr>
+        <tr><td>macOS</td><td><a href="downloads/Tellus-0.1.2-macos-universal.dmg" download style="white-space:nowrap">macOS .dmg, 40 MB</a></td><td>Open the DMG and drag <strong>Tellus</strong> into <strong>Applications</strong>. The first time, right-click Tellus in Applications, choose <strong>Open</strong> and confirm, because the app is not signed by a registered developer.</td></tr>
+        <tr><td>Windows</td><td><a href="downloads/Tellus-0.1.2-windows-x64.zip" download style="white-space:nowrap">Windows .zip, 39 MB</a></td><td>Unzip the folder anywhere, for example <code>C:\Tools\Tellus</code>, and run <code>Tellus.exe</code>. Keep <code>tigrim.exe</code> beside it, because the chat assistant uses it. If SmartScreen appears, choose <strong>More info</strong> and then <strong>Run anyway</strong>.</td></tr>
+      </table></div>
+      <p>Note where the program lives, because an AI assistant needs its full path later: <code>/Applications/Tellus.app/Contents/MacOS/tellus</code> on macOS, or the full path of <code>Tellus.exe</code> on Windows.</p>
+    </section>
+
+    <section id="start">
+      <p class="label">2</p>
+      <h2>First start: free edition or licence key</h2>
+      <p>The first screen asks for a licence key and also offers the free academic edition, so you choose one of two routes.</p>
+      <ol class="steps">
+        <li><strong>Free academic edition.</strong> Click <strong>Continue with the free academic edition</strong>. Tellus needs no key and no internet, remembers the choice and opens straight into the workspace from then on. The top bar shows <strong>Free academic edition</strong>, and clicking it lists the limits and takes a key later.</li>
+        <li><strong>Licence key.</strong> Paste a key of the form <code>TLS-XXXX-XXXX-XXXX-XXXX-XXXX</code> and click <strong>Activate</strong>. Activation needs the internet once, after which Tellus runs offline for up to 30 days and re-checks the key about every 7 days. The top bar then shows <strong>Licensed to</strong> your name.</li>
+      </ol>
+      <div class="tablebox"><table>
+        <tr><th>Item</th><th>Free academic edition</th><th>With a licence key</th></tr>
+        <tr><td>Mesh</td><td>up to 1,000 elements</td><td>no limit</td></tr>
+        <tr><td>Phases</td><td>the initial phase and 2 more</td><td>no limit</td></tr>
+        <tr><td>Soil models</td><td>Linear elastic, Mohr-Coulomb, Soft Soil</td><td>also Hardening Soil, HS small, Soft Soil Creep, hypoplastic sand</td></tr>
+        <tr><td>Structures</td><td>2 plates, 2 geogrids, 2 struts or anchors, no embedded piles</td><td>no limit</td></tr>
+        <tr><td>PLAXIS export</td><td>no</td><td>yes</td></tr>
+        <tr><td>Reports and plots</td><td>"not for commercial use" watermark</td><td>no watermark</td></tr>
+      </table></div>
+      <div class="note"><p>A model beyond a limit is still built and saved, but Calculate explains which limit stops it, for example "The mesh has 1,240 elements; the Free academic edition calculates up to 1000". Coarsen the mesh, remove a phase or change the soil model, or <a href="index.html#contact">ask for a licence key</a>. The free edition is for teaching and learning only, under the <a href="index.html#conditions">academic conditions</a>.</p></div>
+    </section>
+
+    <section id="workspace">
+      <p class="label">3</p>
+      <h2>The workspace</h2>
+      <p>Tellus has two workspaces, chosen at the top left. <strong>Input</strong> builds and calculates the model, and <strong>Output</strong> shows the results, while the <strong>Chat assistant</strong> button at the top right opens a chat panel beside either of them. The theme button switches between dark and light.</p>
+      <p>Input follows six steps, each a tab across the top, and you normally work from left to right:</p>
+      <ul class="flowline"><li>Soil</li><li>Geometry</li><li>Structures</li><li>Mesh</li><li>Flow conditions</li><li>Staged construction</li></ul>
+      <div class="tablebox"><table>
+        <tr><th>Tab</th><th>What you set there</th></tr>
+        <tr><td>Soil</td><td>Soil materials (model, unit weights, stiffness, strength, drainage, permeability), the boreholes and their layers, and the soil contour.</td></tr>
+        <tr><td>Geometry</td><td>Soil clusters drawn with the mouse, for embankments, excavations and irregular ground.</td></tr>
+        <tr><td>Structures</td><td>Plates with interfaces, line and point loads, spring supports for struts and anchors, geogrids, embedded piles, fixities and boundary conditions.</td></tr>
+        <tr><td>Mesh</td><td>Element size, mesh type (15-node triangles or structured 25-node rectangles) and local refinement, then <strong>Generate mesh</strong>.</td></tr>
+        <tr><td>Flow conditions</td><td>Water levels (phreatic lines) and the drainage of the model sides.</td></tr>
+        <tr><td>Staged construction</td><td>The initial phase (K0 procedure or gravity loading) and the phases after it, each Plastic, Consolidation or Safety, with what is active in it, then <strong>Calculate</strong>.</td></tr>
+      </table></div>
+      <p>Anything in the drawing can be picked with <strong>Select</strong> to edit its properties, and Undo and Redo work on every edit. Projects are saved as small <code>.tellus</code> files of a few kB, because the results are recalculated rather than stored.</p>
+      <figure><img src="assets/manual/tellus-material-model.jpg" alt="The Soil materials card with the list of material models open" width="1600" height="1534" loading="lazy"><figcaption>The Soil materials card in the Soil tab, with the material model list open. In the free academic edition, Linear elastic, Mohr-Coulomb and Soft Soil calculate.</figcaption></figure>
+    </section>
+
+    <section id="first-model">
+      <p class="label">4</p>
+      <h2>Your first model: a strip footing</h2>
+      <p>This example builds a 2 m strip footing on sand over clay and finds its settlement and factor of safety. It fits easily in the free edition, because the default mesh has about 420 elements.</p>
+      <ol class="steps">
+        <li><strong>New project.</strong> Click <strong>New project...</strong> and choose <strong>Soil profile</strong>. Tellus starts with a 20 × 10 m contour, 4 m of sand over 6 m of clay, a water level at −2 m and a 2 m line load. Choose <strong>Draw geometry</strong> instead when the soil is not in level layers, such as an embankment.</li>
+        <li><strong>Soil.</strong> In the Soil tab, open each material and set its model and parameters, for example Mohr-Coulomb sand with γ = 18/20 kN/m³, E = 30 MPa, φ = 32° and clay as Undrained (A) with c, φ or as Soft Soil. Set the layer thicknesses under <strong>Boreholes</strong>.</li>
+        <li><strong>Structures.</strong> Check the line load under <strong>Loads</strong> (value in kN/m/m, negative downwards), and add a plate with <strong>Create plate</strong> if the footing has stiffness. The boundary conditions default to rollers on the sides and full fixity at the base.</li>
+        <li><strong>Mesh.</strong> Click <strong>Generate mesh</strong>. The log reports the number of elements, and in the free edition it notes when a mesh is above 1,000 elements, so make the element size factor larger if needed.</li>
+        <li><strong>Flow conditions.</strong> Keep the borehole water level, or draw a phreatic line with <strong>Draw water level</strong>.</li>
+        <li><strong>Staged construction.</strong> The initial phase sets the stresses by the K0 procedure. <code>Phase_1</code> switches the load on as a Plastic phase. Click <strong>Add phase</strong> and set its <strong>Calculation type</strong> to <strong>Safety</strong> to find the factor of safety by φ-c reduction.</li>
+        <li><strong>Calculate.</strong> Click <strong>Calculate</strong>. A window follows each phase and its steps, and when it finishes, <strong>View calculation results</strong> (the eye button) opens the results in Output.</li>
+      </ol>
+      <div class="note"><p>Make the model wide and deep enough for its boundaries not to affect the result: as a rule, about three times the slope height, excavation depth or embankment width on each side.</p></div>
+    </section>
+
+    <section id="results">
+      <p class="label">5</p>
+      <h2>Reading the results</h2>
+      <p>Output plots any phase as a deformed mesh or as contours of displacement, stress and pore pressure, and hovering the plot reads the value at the nearest node. Plates show axial force, shear force and bending moment diagrams along their length, and the log gives the forces in struts, geogrids and piles.</p>
+      <p>A Safety phase reports its factor of safety ΣMsf, and its incremental displacements show the failure mechanism. The <strong>Curves manager</strong> plots displacement or excess pore pressure at chosen points against step, time or ΣMsf: use <strong>Select points for curves</strong> and click the mesh, for example to plot settlement against time during consolidation.</p>
+      <figure><img src="assets/manual/tellus-plate-moment.jpg" alt="Tellus Output with a bending moment diagram along a 6 m plate under a line load" width="1600" height="1022" loading="lazy"><figcaption>Output: bending moment diagram along a 6 m plate under a line load.</figcaption></figure>
+    </section>
+
+    <section id="chat">
+      <p class="label">6</p>
+      <h2>The chat assistant</h2>
+      <p>The chat assistant opens beside the model, so you can describe a problem in English or Thai and watch Tellus build it, for example "a 3 m wide strip footing on 5 m of dense sand over stiff clay carries 150 kPa, the water table is 2 m down; what is the settlement and the factor of safety?". Every change appears in the model on screen as an ordinary edit, so you can check, correct and undo it, and the assistant can write a PDF report with pictures of the results.</p>
+      <p>It has two engines. <strong>Jev</strong> is fast and lets Tellus choose from a fixed set of actions, whereas the <strong>TigrimOS agent</strong> is an LLM agent that plans its own steps with all of Tellus's tools. We recommend the TigrimOS agent with a model from OpenRouter, which gives one API key for many AI models and charges per use.</p>
+      <ol class="steps">
+        <li>Sign up at <a href="https://openrouter.ai" target="_blank" rel="noopener">openrouter.ai</a>, add a few dollars of credit under <strong>Settings → Credits</strong>, and create a key at <a href="https://openrouter.ai/keys" target="_blank" rel="noopener">openrouter.ai/keys</a>. It starts with <code>sk-or-v1-</code>.</li>
+        <li>In Tellus click <strong>Chat assistant</strong>, choose <strong>TigrimOS agent</strong> next to <strong>Assistant</strong>, and click <strong>Settings</strong>. Leave <strong>tigrim</strong> empty, because Tellus finds the agent program it ships with.</li>
+        <li>Fill in API URL <code>https://openrouter.ai/api/v1</code>, model <code>deepseek/deepseek-v4.1-flash-1017</code> (the model Tellus was tested with) and your key, then click <strong>Save key</strong> and <strong>Done</strong>.</li>
+      </ol>
+      <figure><img src="assets/manual/agent-settings.jpg" alt="Chat assistant settings for the TigrimOS agent with the OpenRouter URL, model and a saved key" width="1300" height="1600" loading="lazy" style="max-width:min(420px,100%)"><figcaption>The TigrimOS agent settings with OpenRouter.</figcaption></figure>
+      <p>The key stays on your computer, and the model's cost is paid to OpenRouter, separately from Tellus. Other OpenAI-compatible providers work when you change the URL and the model, as long as the model supports tool calling. A weaker model makes more mistakes when it builds a model, so check its work as you would a junior engineer's.</p>
+      <figure><img src="assets/manual/tellus-agent-slope.jpg" alt="A slope stability analysis in Output with the chat panel beside it" width="1600" height="994" loading="lazy"><figcaption>A slope analysed through the chat: ΣMsf = 1.530, with the displacement contours showing the failure mechanism.</figcaption></figure>
+    </section>
+
+    <section id="mcp">
+      <p class="label">7</p>
+      <h2>Connect Claude Code, Claude Desktop or Codex through MCP</h2>
+      <p>An AI assistant outside Tellus can drive it through the Model Context Protocol. The command <code>tellus --mcp</code> starts Tellus without a window as an MCP server, which the assistant launches on your computer and talks to over standard input and output. It gives the assistant 31 tools to build a model, calculate it and read the results, so a request such as "model a 2 m strip footing on 4 m of sand over soft clay, apply 80 kPa, and give me the settlement and the factor of safety" is answered with the solver's numbers.</p>
+      <p>The server uses the same licence as the program: without a key it has the limits of the free academic edition, and a refused tool says which limit applies. It works on ordinary <code>.tellus</code> files, so a project the assistant saves opens in Tellus for checking. Each assistant needs the full path of the program:</p>
+      <div class="tablebox"><table>
+        <tr><th>System</th><th>Program path</th></tr>
+        <tr><td>macOS</td><td><code>/Applications/Tellus.app/Contents/MacOS/tellus</code></td></tr>
+        <tr><td>Windows</td><td>the full path of <code>Tellus.exe</code>, e.g. <code>C:\Tools\Tellus\Tellus.exe</code> (written <code>C:\\Tools\\Tellus\\Tellus.exe</code> inside JSON)</td></tr>
+      </table></div>
+
+      <div class="tabs" role="tablist" aria-label="Assistant">
+        <button role="tab" aria-selected="true" aria-controls="p-cc" id="t-cc">Claude Code</button>
+        <button role="tab" aria-selected="false" aria-controls="p-cd" id="t-cd">Claude Desktop</button>
+        <button role="tab" aria-selected="false" aria-controls="p-cx" id="t-cx">Codex / ChatGPT desktop</button>
+      </div>
+      <div class="panel" role="tabpanel" id="p-cc" aria-labelledby="t-cc">
+        <p>Register Tellus once for your user account. The tools load in the next Claude Code session, where <code>/mcp</code> lists them as <strong>tellus</strong>.</p>
+        <div class="code"><span class="tag">macOS</span><pre id="cc1">claude mcp add -s user tellus -- /Applications/Tellus.app/Contents/MacOS/tellus --mcp</pre><button class="copy" data-for="cc1" type="button">Copy</button></div>
+        <div class="code"><span class="tag">Windows</span><pre id="cc2">claude mcp add -s user tellus -- C:\Tools\Tellus\Tellus.exe --mcp</pre><button class="copy" data-for="cc2" type="button">Copy</button></div>
+        <p>Check it with <code>claude mcp list</code>, and remove it with <code>claude mcp remove -s user tellus</code>. Use <code>-s project</code> instead to share the server with a project through its <code>.mcp.json</code>.</p>
+      </div>
+      <div class="panel" role="tabpanel" id="p-cd" aria-labelledby="t-cd" hidden>
+        <p>Open <strong>Settings → Developer → Edit Config</strong>, which opens <code>claude_desktop_config.json</code> (in <code>~/Library/Application Support/Claude</code> on macOS, <code>%APPDATA%\Claude</code> on Windows). Add Tellus under <code>mcpServers</code>, save and restart Claude Desktop.</p>
+        <div class="code"><span class="tag">claude_desktop_config.json</span><pre id="cd1">{
+  "mcpServers": {
+    "tellus": {
+      "command": "/Applications/Tellus.app/Contents/MacOS/tellus",
+      "args": ["--mcp"]
+    }
+  }
+}</pre><button class="copy" data-for="cd1" type="button">Copy</button></div>
+        <p>The Tellus tools appear under the tools button of a new chat, and Claude asks before it uses each one unless you allow it for the conversation.</p>
+      </div>
+      <div class="panel" role="tabpanel" id="p-cx" aria-labelledby="t-cx" hidden>
+        <p>The Codex command line, the Codex IDE extension and the ChatGPT desktop app read local MCP servers from <code>~/.codex/config.toml</code> (<code>%USERPROFILE%\.codex\config.toml</code> on Windows). Add Tellus with one command:</p>
+        <div class="code"><span class="tag">terminal</span><pre id="cx1">codex mcp add tellus -- /Applications/Tellus.app/Contents/MacOS/tellus --mcp</pre><button class="copy" data-for="cx1" type="button">Copy</button></div>
+        <p>or write the entry into the file by hand:</p>
+        <div class="code"><span class="tag">~/.codex/config.toml</span><pre id="cx2">[mcp_servers.tellus]
+command = "/Applications/Tellus.app/Contents/MacOS/tellus"
+args = ["--mcp"]</pre><button class="copy" data-for="cx2" type="button">Copy</button></div>
+        <p><code>codex mcp list</code> shows the server and <code>/mcp</code> lists it inside Codex. ChatGPT in the browser or on the phone cannot start a program on your computer, so use the desktop app or Codex.</p>
+      </div>
+
+      <h3>Working with a project file</h3>
+      <p>To start with a project loaded, add <code>--open</code> and the file to the arguments, and add <code>--autosave</code> with a file to save the model there after every change, so you can open it in Tellus and see what the assistant built:</p>
+      <div class="code"><span class="tag">Claude Code</span><pre id="op1">claude mcp add -s user tellus -- /Applications/Tellus.app/Contents/MacOS/tellus --mcp --open /path/to/slope.tellus --autosave /path/to/slope.tellus</pre><button class="copy" data-for="op1" type="button">Copy</button></div>
+      <p>Without <code>--autosave</code>, ask the assistant to save the project before you open it.</p>
+
+      <h3>A first request</h3>
+      <p>Once the server is connected, describe the problem in plain words and ask for numbers, for example:</p>
+      <div class="code"><pre id="rq1">Using the tellus tools, model a 2 m wide strip footing on 4 m of medium dense sand
+(Mohr-Coulomb, phi 32, E 30 MPa) over 6 m of soft clay (Soft Soil), water table 1 m down.
+Apply 80 kPa, then run a safety phase. Report the settlement under the footing centre and
+the factor of safety, and save the project as footing.tellus.</pre><button class="copy" data-for="rq1" type="button">Copy</button></div>
+      <p>A typical run calls the tools in this order, and you can ask the assistant to show each tool call so you can follow it:</p>
+      <ul class="flowline"><li>new_project</li><li>set_soil_layers</li><li>update_soil_material</li><li>add_load</li><li>add_phase</li><li>validate</li><li>calculate</li><li>get_results</li><li>save_project</li></ul>
+      <details>
+        <summary style="cursor:pointer;color:var(--ink)">All 31 tools</summary>
+        <div class="toolgrid">
+          <code>new_project</code><code>open_project</code><code>save_project</code><code>get_model</code><code>set_model</code><code>set_contour</code><code>set_soil_layers</code><code>add_soil_material</code><code>update_soil_material</code><code>add_soil_cluster</code><code>add_load</code><code>add_plate</code><code>add_phase</code><code>update_phase</code><code>set_initial_phase</code><code>add_water_level</code><code>add_embedded_pile</code><code>add_geogrid</code><code>add_spring</code><code>add_fixity</code><code>set_drainage</code><code>set_boundary_conditions</code><code>validate</code><code>generate_mesh</code><code>calculate</code><code>show_picture</code><code>write_report</code><code>get_results</code><code>get_plate_forces</code><code>get_curve</code><code>export_plaxis_commands</code>
+        </div>
+      </details>
+      <div class="note warn"><p>The AI model you use in Claude or Codex is paid for under your own Anthropic or OpenAI account, separately from Tellus. The assistant reports the solver's numbers, but it chooses the geometry and parameters itself, so open the saved project in Tellus and check the model before you use a result. The Windows configurations follow the same format but have not yet been tried on a Windows PC, so <a href="index.html#contact">tell us</a> if one fails.</p></div>
+    </section>
+
+    <section id="cli">
+      <p class="label">8</p>
+      <h2>Command-line options</h2>
+      <div class="tablebox"><table>
+        <tr><th>Command</th><th>What it does</th></tr>
+        <tr><td><code>tellus project.tellus</code></td><td>Opens a project in the window.</td></tr>
+        <tr><td><code>tellus --mcp</code></td><td>Starts the headless MCP server on standard input and output.</td></tr>
+        <tr><td><code>--open FILE</code>, <code>--autosave FILE</code></td><td>With <code>--mcp</code>: start from a project, and save the model after every change.</td></tr>
+        <tr><td><code>tellus --activate KEY</code></td><td>Activates a licence key on this computer, for installing on many computers.</td></tr>
+        <tr><td><code>tellus --licence</code></td><td>Shows the holder, plan and expiry, or says the computer is not activated (free edition).</td></tr>
+        <tr><td><code>tellus --deactivate</code></td><td>Frees this computer's seat so the key can move to another computer.</td></tr>
+      </table></div>
+      <p>On macOS the program is <code>/Applications/Tellus.app/Contents/MacOS/tellus</code>, and on Windows it is <code>Tellus.exe</code>.</p>
+    </section>
+
+    <section id="trouble">
+      <p class="label">9</p>
+      <h2>Troubleshooting</h2>
+      <div class="tablebox"><table>
+        <tr><th>Problem</th><th>What to do</th></tr>
+        <tr><td>macOS says the app cannot be opened</td><td>Right-click Tellus in Applications, choose <strong>Open</strong> and confirm. This is needed once.</td></tr>
+        <tr><td>Calculate refuses with "Free academic edition …"</td><td>The model is beyond a free limit. The message names it: coarsen the mesh, remove phases or structures, or change the soil model, or ask for a licence key.</td></tr>
+        <tr><td>The Tellus tools do not appear in Claude or Codex</td><td>Check that the program path in the configuration is complete, run it with <code>--licence</code> in a terminal to see that it starts, and start a new session, because MCP tools load when a session starts.</td></tr>
+        <tr><td>"Cannot reach the licence server"</td><td>Activation needs the internet once. Connect and try again, or ask IT to allow HTTPS to the licence server. The free edition needs no connection.</td></tr>
+        <tr><td>The assistant built something odd</td><td>Ask it to save the project, open the file in Tellus and check the model, then tell the assistant what to correct.</td></tr>
+      </table></div>
+      <p>For anything else, <a href="index.html#contact">send us a message</a> with the output of <code>tellus --licence</code> and, if you can, the <code>.tellus</code> file.</p>
+    </section>
+  </article>
+</div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div><a href="index.html" style="color:var(--sand)">Tellus home</a> · <a href="index.html#conditions" style="color:var(--sand)">Academic conditions</a> · <a href="index.html#contact" style="color:var(--sand)">Contact</a></div>
+    <p style="margin:0;max-width:60ch">Tellus is research software. Results depend on the model and its parameters and must be checked by a qualified engineer before they are used in design.</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  // copy buttons: the text of the block named by data-for
+  document.querySelectorAll('.copy').forEach(function(b){
+    b.addEventListener('click', function(){
+      var el = document.getElementById(b.dataset.for), text = el.innerText.trim();
+      function done(){ b.textContent = 'Copied'; setTimeout(function(){ b.textContent = 'Copy'; }, 1500); }
+      function select(){ var r = document.createRange(); r.selectNodeContents(el); var s = getSelection(); s.removeAllRanges(); s.addRange(r); }
+      try { navigator.clipboard.writeText(text).then(done, select); } catch(e){ select(); }
+    });
+  });
+  // assistant tabs
+  var tabs = document.querySelectorAll('[role="tab"]');
+  tabs.forEach(function(t){
+    t.addEventListener('click', function(){
+      tabs.forEach(function(o){ o.setAttribute('aria-selected', o === t ? 'true' : 'false'); document.getElementById(o.getAttribute('aria-controls')).hidden = o !== t; });
+    });
+  });
+  // contents: mark the section in view
+  var links = Array.prototype.slice.call(document.querySelectorAll('.toc a'));
+  if ('IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(es){
+      es.forEach(function(e){ if (e.isIntersecting){ links.forEach(function(a){ a.classList.toggle('on', a.getAttribute('href') === '#' + e.target.id); }); } });
+    }, { rootMargin: '-30% 0px -60% 0px' });
+    document.querySelectorAll('article section').forEach(function(s){ io.observe(s); });
+  }
+})();
+</script>
+</body>
+</html>
