@@ -243,6 +243,25 @@ footer strong{color:var(--ink-2);font-weight:600}
 .offer-mail a{color:var(--sand);font-size:17px;text-decoration:none;font-weight:500}
 .offer-mail a:hover{text-decoration:underline}
 @media (max-width:760px){ .offer{grid-template-columns:1fr} }
+/* contact form */
+.contactgrid{display:grid;grid-template-columns:1fr 1.15fr;gap:clamp(28px,5vw,64px);align-items:start}
+.contactgrid > *{min-width:0}
+@media (max-width:900px){ .contactgrid{grid-template-columns:1fr} }
+.msg{display:grid;gap:16px;background:var(--ground);border:1px solid var(--line);border-radius:10px;padding:clamp(18px,3vw,28px)}
+.msg .row2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:560px){ .msg .row2{grid-template-columns:1fr} }
+.msg label{display:grid;gap:6px;font:500 12px/1.3 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3)}
+.msg input,.msg select,.msg textarea{font:400 15px/1.45 var(--body);color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:7px;padding:10px 12px;width:100%;text-transform:none;letter-spacing:0}
+.msg textarea{resize:vertical;min-height:130px}
+.msg input:focus,.msg select:focus,.msg textarea:focus{outline:2px solid var(--cyan);outline-offset:1px;border-color:transparent}
+.msg .hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+.msg .send{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.msg button{cursor:pointer;font-family:var(--body)}
+.msg button[disabled]{opacity:.6;cursor:wait}
+#msgstatus{font-size:14px;color:var(--ink-2)}
+#msgstatus.ok{color:var(--ok)}
+#msgstatus.err{color:var(--warn)}
+#msgstatus a{color:var(--sand)}
 </style>
 </head>
 <body>
@@ -257,7 +276,7 @@ footer strong{color:var(--ink-2);font-weight:600}
       <a href="#speed">GPU speed</a>
       <a href="#validation">Validation</a>
       <a href="#cases">Cases</a>
-      <a href="#start">Get started</a>
+      <a href="#start">Download</a>
       <a href="#papers">Papers</a>
       <a href="#contact">Contact</a>
     </nav>
@@ -273,8 +292,8 @@ footer strong{color:var(--ink-2);font-weight:600}
     <h1 style="margin-top:18px">Ground models an agent builds and an <em>engineer checks</em></h1>
     <p class="lede">Tellus 2D and Tellus3D are plane-strain and three-dimensional FE programs for soil, written in Rust. An AI agent drives them through Model Context Protocol tools: it builds the soil profile, structures and construction stages, calculates, reads results and writes the report. The engineer opens the same project in the desktop app and checks every step.</p>
     <div class="actions">
-      <a class="btn primary" href="mailto:tellusfem@gmail.com?subject=Tellus%202D%20download%20request">Request download</a>
-      <a class="btn" href="#licence">Trial or academic licence</a>
+      <a class="btn primary" href="#start">Download free academic edition</a>
+      <a class="btn" href="#contact">Ask for a licence key</a>
       <a class="btn" href="#validation">See the benchmarks</a>
     </div>
     <div class="legend"><span class="ramp"></span><span>|u| under a strip footing on sand over clay, 15-node triangles</span></div>
@@ -439,22 +458,23 @@ footer strong{color:var(--ink-2);font-weight:600}
     </div>
     <div class="offer" id="licence">
       <div>
-        <h3>Try Tellus, or use it free for teaching and research</h3>
-        <p>We offer trial licences, and free academic licences for universities, students and non-commercial research. Email us with your name, organisation and how you plan to use Tellus 2D or Tellus3D.</p>
+        <h3>Tellus 2D is free for teaching and learning, with no key</h3>
+        <p>Download the app and choose <b>Continue with the free academic edition</b> at the first start. It needs no key and no internet, and it calculates models of up to 1,000 elements with the initial phase and two more, the Linear elastic, Mohr-Coulomb and Soft Soil models, up to two plates, two geogrids and two struts or anchors. Reports carry an academic watermark. A licence key lifts every limit, and we issue free research keys to universities and trial keys to companies.</p>
+        <div class="req" style="margin-top:14px"><span>1,000 elements</span><span>2 phases</span><span>MC + Soft Soil</span><span>no key needed</span></div>
       </div>
       <div class="offer-mail">
-        <a class="mono" href="mailto:tellusfem@gmail.com?subject=Tellus%20licence%20request" id="mail2">tellusfem@gmail.com</a>
-        <button class="copy inline" id="copymail2" type="button">Copy</button>
+        <a class="btn primary" href="#contact">Ask for a licence key</a>
       </div>
     </div>
     <div class="start">
       <div class="card">
         <h3>Tellus 2D</h3>
-        <p>Ready-built apps for macOS (universal, macOS 11 or later) and 64-bit Windows are sent on request: email <span class="mono" style="user-select:all">tellusfem@gmail.com</span> and we reply with a download link. The apps are not signed by a registered developer, so macOS needs right-click → Open the first time.</p>
+        <p>Version 0.1.2 for macOS (universal, macOS 11 or later) and 64-bit Windows. Without a key it runs as the free academic edition, and a licence key entered in the app lifts the limits. The apps are not signed by a registered developer, so macOS needs right-click → Open the first time, and Windows needs More info → Run anyway.</p>
+        <div class="actions" style="margin-top:0"><a class="btn primary" href="https://github.com/Sompote/tellus2D/releases/download/v0.1.2/Tellus-0.1.2-macos-universal.dmg">Download for macOS</a><a class="btn" href="https://github.com/Sompote/tellus2D/releases/download/v0.1.2/Tellus-0.1.2-windows-x64.zip">Download for Windows</a></div>
         <div class="req"><span>37 MB download</span><span>73 MB idle</span><span>~85 MB per 1,000 elements</span><span>4 GB RAM is enough</span></div>
         <div class="code"><pre id="c1"><span class="c"># register the headless MCP server with Claude Code</span>
 claude mcp add -s user tellus -- /path/to/tellus --mcp</pre><button class="copy" data-for="c1" type="button">Copy</button></div>
-        <div class="actions" style="margin-top:4px"><a class="btn primary" href="mailto:tellusfem@gmail.com?subject=Tellus%202D%20download%20request">Request download</a></div>
+        <p style="font-size:14px">Installation, activation and agent set-up are in the <a href="https://github.com/Sompote/tellus2D#readme" target="_blank" rel="noopener" style="color:var(--sand)">Tellus 2D guide</a>.</p>
       </div>
       <div class="card">
         <h3>Tellus3D</h3>
@@ -481,11 +501,41 @@ cloud/vast_gpu.sh down                   <span class="c"># destroy the box</span
     </div>
   </div>
 </section>
+
+<section id="contact" class="speed">
+  <div class="wrap contactgrid">
+    <div class="head" style="margin:0">
+      <p class="label">Contact us</p>
+      <h2>Licence keys, trials and questions</h2>
+      <p class="lede">Send us a message and we reply by e-mail, usually within two working days. For a free research key, write from your university address and tell us your supervisor or course, and for a trial or commercial key, tell us your company and the projects you have in mind.</p>
+      <p class="contact"><a class="mono" href="mailto:tellusfem@gmail.com" id="mail">tellusfem@gmail.com</a><button class="copy inline" id="copymail" type="button">Copy</button></p>
+    </div>
+    <form class="msg" id="msgform" novalidate>
+      <div class="row2">
+        <label>Name<input name="name" autocomplete="name" required maxlength="120"></label>
+        <label>E-mail<input name="email" type="email" autocomplete="email" required maxlength="160"></label>
+      </div>
+      <div class="row2">
+        <label>Organisation<input name="organisation" autocomplete="organization" maxlength="160"></label>
+        <label>About<select name="topic">
+          <option>Academic research key (free)</option>
+          <option>Trial key</option>
+          <option>Commercial licence</option>
+          <option>Tellus3D or source code</option>
+          <option>Question or bug report</option>
+        </select></label>
+      </div>
+      <label>Message<textarea name="message" rows="6" required maxlength="5000" placeholder="How you plan to use Tellus, and anything we should know"></textarea></label>
+      <input type="text" name="_honey" tabindex="-1" autocomplete="off" class="hp" aria-hidden="true">
+      <div class="send"><button class="btn primary" type="submit" id="msgsend">Send message</button><span id="msgstatus" role="status" aria-live="polite"></span></div>
+    </form>
+  </div>
+</section>
 </main>
 
-<footer id="contact">
+<footer>
   <div class="wrap">
-    <div><strong>Contact</strong><br>Trials, free academic licences, source requests and collaboration<br><span class="contact"><a class="mono" href="mailto:tellusfem@gmail.com" id="mail">tellusfem@gmail.com</a><button class="copy inline" id="copymail" type="button">Copy</button></span></div>
+    <div><strong>Tellus</strong><br>Licence keys, trials, source requests and collaboration: <a href="#contact" style="color:var(--sand)">contact us</a></div>
     <p class="disclaim">Tellus is version 0.1 research software. Results depend on the model and its parameters and must be checked by a qualified engineer before they are used in design.</p>
   </div>
 </footer>
@@ -504,18 +554,39 @@ cloud/vast_gpu.sh down                   <span class="c"># destroy the box</span
   });
 
   // copy the contact address
-  var cm2 = document.getElementById('copymail2');
-  cm2.addEventListener('click', function(){
-    function done(){ cm2.textContent = 'Copied'; setTimeout(function(){ cm2.textContent = 'Copy'; }, 1500); }
-    function select(){ var r = document.createRange(); r.selectNodeContents(document.getElementById('mail2')); var s = getSelection(); s.removeAllRanges(); s.addRange(r); }
-    try { navigator.clipboard.writeText('tellusfem@gmail.com').then(done, select); } catch(e){ select(); }
-  });
   var cm = document.getElementById('copymail');
   cm.addEventListener('click', function(){
     var t = 'tellusfem@gmail.com';
     function done(){ cm.textContent = 'Copied'; setTimeout(function(){ cm.textContent = 'Copy'; }, 1500); }
     function select(){ var r = document.createRange(); r.selectNodeContents(document.getElementById('mail')); var s = getSelection(); s.removeAllRanges(); s.addRange(r); }
     try { navigator.clipboard.writeText(t).then(done, select); } catch(e){ select(); }
+  });
+
+  // contact form: sent by FormSubmit to tellusfem@gmail.com; if that fails, an e-mail draft
+  var form = document.getElementById('msgform'), send = document.getElementById('msgsend'), st = document.getElementById('msgstatus');
+  function status(text, cls){ st.className = cls || ''; st.textContent = text; }
+  form.addEventListener('submit', function(ev){
+    ev.preventDefault();
+    var f = form.elements;
+    if (!f.name.value.trim() || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(f.email.value.trim()) || !f.message.value.trim()){
+      status('Please give your name, a valid e-mail and a message.', 'err'); return;
+    }
+    if (f._honey.value) return;
+    var data = { name: f.name.value.trim(), email: f.email.value.trim(), organisation: f.organisation.value.trim(), topic: f.topic.value, message: f.message.value.trim(),
+      _subject: 'Tellus website: ' + f.topic.value + ' (' + f.name.value.trim() + ')', _replyto: f.email.value.trim(), _template: 'table', _captcha: 'false' };
+    send.disabled = true; status('Sending…');
+    fetch('https://formsubmit.co/ajax/tellusfem@gmail.com', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, body: JSON.stringify(data) })
+      .then(function(r){ return r.json().then(function(j){ if (!r.ok || String(j.success) !== 'true') throw new Error(j.message || r.status); }); })
+      .then(function(){ form.reset(); status('Thank you, your message was sent. We reply to ' + data.email + '.', 'ok'); })
+      .catch(function(){
+        var body = 'Name: ' + data.name + '\nOrganisation: ' + data.organisation + '\nAbout: ' + data.topic + '\n\n' + data.message;
+        st.className = 'err'; st.innerHTML = '';
+        st.append('The message could not be sent from this page. ');
+        var a = document.createElement('a'); a.textContent = 'Send it by e-mail instead';
+        a.href = 'mailto:tellusfem@gmail.com?subject=' + encodeURIComponent(data._subject) + '&body=' + encodeURIComponent(body);
+        st.append(a, '.');
+      })
+      .then(function(){ send.disabled = false; });
   });
 
   // hero: a triangulated two-layer soil mesh under a strip footing, coloured by |u|
