@@ -247,6 +247,12 @@ footer strong{color:var(--ink-2);font-weight:600}
 .dlnote a{color:var(--sand)}
 .dlcol{flex-direction:column;align-items:stretch}
 .dlcol .btn{justify-content:center}
+.terms{margin:0;padding:0;list-style:none;counter-reset:t;display:grid;grid-template-columns:1fr 1fr;gap:0 40px;border-top:1px solid var(--line)}
+.terms li{counter-increment:t;position:relative;padding:18px 0 18px 40px;border-bottom:1px solid var(--line);color:var(--ink-2);font-size:15px;line-height:1.55}
+.terms li::before{content:counter(t);position:absolute;left:0;top:19px;font:500 13px/1.4 var(--mono);color:var(--sand)}
+.terms li b{color:var(--ink);font-weight:600}
+.terms a{color:var(--sand)}
+@media (max-width:860px){ .terms{grid-template-columns:1fr} }
 /* contact form */
 .contactgrid{display:grid;grid-template-columns:1fr 1.15fr;gap:clamp(28px,5vw,64px);align-items:start}
 .contactgrid > *{min-width:0}
@@ -281,6 +287,7 @@ footer strong{color:var(--ink-2);font-weight:600}
       <a href="#validation">Validation</a>
       <a href="#cases">Cases</a>
       <a href="#start">Download</a>
+      <a href="#conditions">Conditions</a>
       <a href="#papers">Papers</a>
       <a href="#contact">Contact</a>
     </nav>
@@ -301,7 +308,7 @@ footer strong{color:var(--ink-2);font-weight:600}
       <a class="btn" href="#contact">Ask for a licence key</a>
       <a class="btn" href="#validation">See the benchmarks</a>
     </div>
-    <p class="dlnote">Tellus 2D 0.1.2, free academic edition: no key, no registration, for teaching and learning. <a href="#licence">See the limits</a>.</p>
+    <p class="dlnote">Tellus 2D 0.1.2, free academic edition: no key, no registration, for teaching and learning. By downloading you accept the <a href="#conditions">academic conditions</a>.</p>
     <div class="legend"><span class="ramp"></span><span>|u| under a strip footing on sand over clay, 15-node triangles</span></div>
   </div>
 </div>
@@ -466,6 +473,7 @@ footer strong{color:var(--ink-2);font-weight:600}
       <div>
         <h3>Tellus 2D is free for teaching and learning, with no key</h3>
         <p>Download the app and choose <b>Continue with the free academic edition</b> at the first start. It needs no key and no internet, and it calculates models of up to 1,000 elements with the initial phase and two more, the Linear elastic, Mohr-Coulomb and Soft Soil models, up to two plates, two geogrids and two struts or anchors. Reports carry an academic watermark. A licence key lifts every limit, and we issue free research keys to universities and trial keys to companies.</p>
+        <p style="margin-top:10px">By downloading you accept the <a href="#conditions" style="color:var(--sand)">academic conditions</a> below.</p>
         <div class="req" style="margin-top:14px"><span>1,000 elements</span><span>2 phases</span><span>MC + Soft Soil</span><span>no key needed</span></div>
       </div>
       <div class="offer-mail dlcol">
@@ -494,6 +502,27 @@ cloud/vast_gpu.sh down                   <span class="c"># destroy the box</span
         <p style="font-size:14px">The source is available on request from <span class="mono" style="user-select:all">tellusfem@gmail.com</span>. The formulation and benchmarks are in the <a href="https://zenodo.org/records/23551608" target="_blank" rel="noopener" style="color:var(--sand)">Tellus3D paper on Zenodo</a>.</p>
       </div>
     </div>
+  </div>
+</section>
+
+<section id="conditions">
+  <div class="wrap">
+    <div class="head">
+      <p class="label">Academic conditions</p>
+      <h2>Terms of use of the free academic edition</h2>
+      <p class="lede">The free academic edition of Tellus 2D is offered on the conditions below. Downloading, installing or using it means that you accept them. A licence key is issued on separate terms, which come with the key.</p>
+    </div>
+    <ol class="terms">
+      <li><b>Who may use it.</b> Students, teachers and researchers at universities, colleges and schools, and individuals who are learning the finite element method on their own.</li>
+      <li><b>Permitted use.</b> Teaching, coursework, student exercises and projects, theses, non-commercial research and self-study.</li>
+      <li><b>No commercial use.</b> The free edition must not be used for design, consulting, checking or any work for a client or an employer that is paid for, and its results must not appear in design reports, tender documents or other commercial deliverables. Companies and paid projects need a licence key.</li>
+      <li><b>Limits and watermark.</b> The free edition calculates models within its limits (1,000 elements, the initial phase and two more, the Linear elastic, Mohr-Coulomb and Soft Soil models, two plates, two geogrids and two struts or anchors). Its reports and result plots carry a "not for commercial use" watermark, which you must not remove or hide.</li>
+      <li><b>Citation.</b> If results from Tellus appear in a thesis, paper or presentation, cite the program and its calibration paper, <a href="https://zenodo.org/records/23550829" target="_blank" rel="noopener">Calibration of Tellus 2D, an agent-driven plane-strain geotechnical finite element program</a> (Zenodo, 2026).</li>
+      <li><b>No redistribution.</b> Share the link to this page rather than the program files. Do not sell, rent, repackage, modify or reverse engineer the program, or try to bypass its limits.</li>
+      <li><b>No warranty.</b> Tellus is research software provided as is, without warranty of any kind. Results depend on the model and its parameters, and they must be checked by a qualified geotechnical engineer before any use. The authors are not liable for any loss or damage from its use.</li>
+      <li><b>Changes and termination.</b> These conditions and the limits may change with new versions. The right to use the free edition ends if the conditions are broken, and the copies must then be deleted.</li>
+    </ol>
+    <p class="note">Questions about these conditions, or about using Tellus beyond them: <a href="#contact" style="color:var(--sand)">contact us</a>.</p>
   </div>
 </section>
 
