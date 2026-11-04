@@ -309,7 +309,7 @@ footer strong{color:var(--ink-2);font-weight:600}
       <a class="btn" href="manual.html">User manual</a>
       <a class="btn" href="#contact">Ask for a licence key</a>
     </div>
-    <p class="dlnote">Tellus 2D 0.1.2, free academic edition: no key, no registration, for teaching and learning. By downloading you accept the <a href="#conditions">academic conditions</a>.</p>
+    <p class="dlnote">Tellus 2D 0.1.2, free academic edition: no key, no registration, for teaching and learning. By downloading you accept the <a href="#conditions">academic conditions and disclaimer</a>.</p>
     <div class="legend"><span class="ramp"></span><span>|u| under a strip footing on sand over clay, 15-node triangles</span></div>
   </div>
 </div>
@@ -474,7 +474,7 @@ footer strong{color:var(--ink-2);font-weight:600}
       <div>
         <h3>Tellus 2D is free for teaching and learning, with no key</h3>
         <p>Download the app and choose <b>Continue with the free academic edition</b> at the first start. It needs no key and no internet, and it calculates models of up to 1,000 elements with the initial phase and two more, the Linear elastic, Mohr-Coulomb and Soft Soil models, up to two plates, two geogrids and two struts or anchors. Reports carry an academic watermark. A licence key lifts every limit, and we issue free research keys to universities and trial keys to companies.</p>
-        <p style="margin-top:10px">By downloading you accept the <a href="#conditions" style="color:var(--sand)">academic conditions</a> below.</p>
+        <p style="margin-top:10px">By downloading you accept the <a href="#conditions" style="color:var(--sand)">academic conditions and disclaimer</a> below.</p>
         <div class="req" style="margin-top:14px"><span>1,000 elements</span><span>2 phases</span><span>MC + Soft Soil</span><span>no key needed</span></div>
       </div>
       <div class="offer-mail dlcol">
@@ -520,8 +520,22 @@ cloud/vast_gpu.sh down                   <span class="c"># destroy the box</span
       <li><b>Limits and watermark.</b> The free edition calculates models within its limits (1,000 elements, the initial phase and two more, the Linear elastic, Mohr-Coulomb and Soft Soil models, two plates, two geogrids and two struts or anchors). Its reports and result plots carry a "not for commercial use" watermark, which you must not remove or hide.</li>
       <li><b>Citation.</b> If results from Tellus appear in a thesis, paper or presentation, cite the program and its calibration paper, <a href="https://zenodo.org/records/23550829" target="_blank" rel="noopener">Calibration of Tellus 2D, an agent-driven plane-strain geotechnical finite element program</a> (Zenodo, 2026).</li>
       <li><b>No redistribution.</b> Share the link to this page rather than the program files. Do not sell, rent, repackage, modify or reverse engineer the program, or try to bypass its limits.</li>
-      <li><b>No warranty.</b> Tellus is research software provided as is, without warranty of any kind. Results depend on the model and its parameters, and they must be checked by a qualified geotechnical engineer before any use. The authors are not liable for any loss or damage from its use.</li>
+      <li><b>No warranty.</b> Tellus is research software provided as is, without warranty of any kind. The full terms are in the <a href="#disclaimer">disclaimer</a> below.</li>
       <li><b>Changes and termination.</b> These conditions and the limits may change with new versions. The right to use the free edition ends if the conditions are broken, and the copies must then be deleted.</li>
+    </ol>
+    <div class="head" id="disclaimer" style="margin-top:56px">
+      <p class="label">Disclaimer</p>
+      <h2>Disclaimer and limitation of liability</h2>
+      <p class="lede">This disclaimer is part of the academic conditions and applies to every use of the free academic edition, so please read it before you download the program.</p>
+    </div>
+    <ol class="terms">
+      <li><b>Provided as is.</b> Tellus 2D is version 0.1 research software, provided "as is" and "as available" without any warranty, express or implied, including warranties of accuracy, fitness for a particular purpose and non-infringement. The authors do not warrant that the program is free of errors or that its results are correct.</li>
+      <li><b>Not for real design or construction.</b> The free edition is a teaching tool, so its results must not be used to design, check, build or assess the safety of any real foundation, slope, excavation, embankment or other structure. Finite element results depend on the mesh, the soil model, its parameters and the construction stages, and a calculation that runs to the end can still be wrong.</li>
+      <li><b>Your responsibility.</b> You are responsible for your input, for checking the results against hand calculations or other methods, and for every conclusion you draw from them. Using Tellus in coursework does not replace the judgement of your teacher or of a qualified geotechnical engineer.</li>
+      <li><b>The AI assistant.</b> The built-in chat (Jev or the TigrimOS agent) and the MCP tools use AI models, which can build the wrong geometry, choose unsuitable parameters or describe results incorrectly, so check every model the assistant builds before you rely on it. When you use the chat, your prompts and model data go to the AI provider you choose, such as OpenRouter, under that provider's terms and privacy policy, which the authors do not control.</li>
+      <li><b>Limitation of liability.</b> As far as the law allows, the authors and their institutions are not liable for any direct, indirect, incidental or consequential loss or damage from the use of the program or from being unable to use it, including loss of data, loss of marks or grades, financial loss and damage to property.</li>
+      <li><b>Academic integrity.</b> Students must follow their institution's rules on software and AI assistance in assessed work, and must declare the use of the AI assistant when those rules require it.</li>
+      <li><b>Governing law and users outside Thailand.</b> These conditions are governed by the laws of Thailand, wherever the program is downloaded or used. If you use Tellus outside Thailand, you are responsible for following the laws of your own country, including its rules on software use and export. Some countries give users rights that a contract cannot exclude, and nothing in these conditions removes those rights, so the limits in item 5 apply only as far as your local law allows. If a court finds any part of these conditions unenforceable, the rest stays in force.</li>
     </ol>
     <p class="note">Questions about these conditions, or about using Tellus beyond them: <a href="#contact" style="color:var(--sand)">contact us</a>.</p>
   </div>
