@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tellus Academic Edition</title>
+<meta name="description" content="The free academic edition of Tellus 2D: who may use it, every limit and how it is checked, the watermark, how to fit a teaching model within the limits, and how to get a licence key.">
+<link rel="icon" href="assets/tellus-favicon.png">
+<link rel="apple-touch-icon" href="assets/tellus-logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@112,500;112,700;125,800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  color-scheme: dark;
+  --ground:#121418; --surface:#1a1d23; --raise:#22262e; --line:#2f343d;
+  --ink:#ebe6db; --ink-2:#b9b3a6; --ink-3:#857f73;
+  --sand:#e2b462; --clay:#8c6b3c; --cyan:#56cfe1; --deep:#1f5fd0;
+  --ok:#6fcf97; --warn:#e8a33d;
+  --display:"Archivo", "Helvetica Neue", Arial, sans-serif;
+  --body:"IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono:"IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --wrap:1180px;
+}
+@media (prefers-color-scheme: light){
+  :root:not([data-theme="dark"]){
+    color-scheme: light;
+    --ground:#f1f2ef; --surface:#ffffff; --raise:#e7e8e3; --line:#d3d5ce;
+    --ink:#1b1e23; --ink-2:#4a4e55; --ink-3:#6f737a;
+    --sand:#a8711c; --clay:#7a5a2c; --cyan:#127e94; --deep:#1b54b8;
+    --ok:#2e8b57; --warn:#b06d0a;
+  }
+}
+:root[data-theme="light"]{
+  color-scheme: light;
+  --ground:#f1f2ef; --surface:#ffffff; --raise:#e7e8e3; --line:#d3d5ce;
+  --ink:#1b1e23; --ink-2:#4a4e55; --ink-3:#6f737a;
+  --sand:#a8711c; --clay:#7a5a2c; --cyan:#127e94; --deep:#1b54b8;
+  --ok:#2e8b57; --warn:#b06d0a;
+}
+:root[data-theme="dark"]{ color-scheme: dark; }
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:76px}
+@media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto} }
+body{margin:0;background:var(--ground);color:var(--ink);font:400 16px/1.65 var(--body);-webkit-font-smoothing:antialiased}
+img{max-width:100%;height:auto;display:block}
+a{color:var(--sand)}
+:focus-visible{outline:2px solid var(--cyan);outline-offset:3px;border-radius:4px}
+.wrap{max-width:var(--wrap);margin:0 auto;padding-inline:clamp(16px,4vw,40px)}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;letter-spacing:-.01em}
+h1{font-size:clamp(34px,4.6vw,54px);font-weight:800;font-stretch:125%;line-height:1.02}
+h2{font-size:clamp(24px,2.8vw,32px);font-stretch:112%;font-weight:700;line-height:1.15;margin-top:8px}
+h3{font-size:18px;font-stretch:112%;font-weight:700;line-height:1.3;margin:28px 0 8px}
+p{margin:0 0 14px}
+.label{font:500 12px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--sand)}
+.mono,code{font-family:var(--mono)}
+code{font-size:.88em;background:var(--raise);padding:1px 6px;border-radius:4px;overflow-wrap:anywhere}
+/* header */
+header.top{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--ground) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;align-items:center;gap:24px;min-height:60px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);font:800 19px/1 var(--display);font-stretch:125%;letter-spacing:.02em}
+.brand img{width:34px;height:34px}
+.brand small{font:500 12px/1 var(--mono);letter-spacing:.1em;color:var(--ink-3);text-transform:uppercase;margin-left:4px}
+nav.links{display:flex;gap:4px 18px;flex-wrap:wrap;margin-left:auto}
+nav.links a{text-decoration:none;color:var(--ink-2);font-size:14px;padding:6px 0}
+nav.links a:hover{color:var(--ink)}
+/* intro */
+.intro{border-bottom:1px solid var(--line);padding-block:clamp(44px,7vw,80px) clamp(32px,5vw,52px)}
+.intro .lede{color:var(--ink-2);max-width:66ch;font-size:clamp(16px,1.5vw,18px);margin-top:18px}
+.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:11px 16px;border-radius:8px;text-decoration:none;font:600 14.5px/1 var(--body);border:1px solid var(--line);background:var(--surface);color:var(--ink)}
+.btn.primary{background:var(--sand);color:#17130b;border-color:transparent}
+.btn:hover{filter:brightness(1.08)}
+/* layout: contents beside the text */
+.doc{display:grid;grid-template-columns:230px minmax(0,1fr);gap:clamp(28px,4vw,56px);padding-block:40px 80px}
+@media (max-width:900px){ .doc{grid-template-columns:1fr} }
+.toc{position:sticky;top:84px;align-self:start;font-size:14px}
+.toc ol{list-style:none;margin:10px 0 0;padding:0;counter-reset:c;border-left:1px solid var(--line)}
+.toc li{counter-increment:c}
+.toc a{display:block;padding:6px 0 6px 14px;margin-left:-1px;border-left:2px solid transparent;color:var(--ink-2);text-decoration:none;line-height:1.35}
+.toc a::before{content:counter(c) ". ";color:var(--ink-3);font-family:var(--mono);font-size:12px}
+.toc a:hover,.toc a.on{color:var(--ink);border-left-color:var(--sand)}
+@media (max-width:900px){
+  .toc{position:static;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px 18px}
+  .toc ol{columns:2;column-gap:20px;border-left:0}
+  .toc a{padding-left:0;border-left:0}
+}
+@media (max-width:480px){ .toc ol{columns:1} }
+article{min-width:0;max-width:78ch}
+article section{padding-bottom:36px;margin-bottom:36px;border-bottom:1px solid var(--line)}
+article section:last-child{border-bottom:0}
+article p, article li{color:var(--ink-2)}
+article strong{color:var(--ink);font-weight:600}
+article ul, article ol.steps{padding-left:22px;margin:0 0 16px}
+article li{margin-bottom:6px}
+ol.steps{counter-reset:s;list-style:none;padding-left:0 !important}
+ol.steps > li{counter-increment:s;position:relative;padding-left:38px;margin-bottom:12px}
+ol.steps > li::before{content:counter(s);position:absolute;left:0;top:1px;width:24px;height:24px;border-radius:50%;background:var(--raise);color:var(--sand);font:500 12px/24px var(--mono);text-align:center}
+figure{margin:20px 0 24px}
+figure img{border-radius:10px;border:1px solid var(--line)}
+figcaption{color:var(--ink-3);font-size:13.5px;line-height:1.5;margin-top:10px}
+.tablebox{overflow-x:auto;margin:6px 0 18px;border:1px solid var(--line);border-radius:10px}
+table{border-collapse:collapse;width:100%;font-size:14.5px}
+th,td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:0}
+th{font:500 11.5px/1.3 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);background:var(--surface)}
+td{color:var(--ink-2)}
+td:first-child{color:var(--ink);font-weight:500}
+.code{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:8px;margin:8px 0 18px}
+.code pre{margin:0;padding:14px 16px;padding-right:78px;overflow-x:auto;font:400 13px/1.6 var(--mono);color:var(--ink)}
+.code .c{color:var(--ink-3)}
+.code .tag{position:absolute;top:-9px;left:12px;font:500 10.5px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;background:var(--ground);color:var(--ink-3);padding:2px 6px;border-radius:4px}
+.copy{position:absolute;top:8px;right:8px;font:500 12px/1 var(--mono);padding:7px 10px;border-radius:6px;border:1px solid var(--line);background:var(--raise);color:var(--ink-2);cursor:pointer}
+.copy:hover{color:var(--ink)}
+.tabs{display:flex;gap:4px;flex-wrap:wrap;margin:14px 0 0}
+.tabs button{font:500 13px/1 var(--body);padding:9px 14px;border-radius:8px 8px 0 0;border:1px solid var(--line);border-bottom:0;background:var(--raise);color:var(--ink-2);cursor:pointer}
+.tabs button[aria-selected="true"]{background:var(--surface);color:var(--ink)}
+.panel{border:1px solid var(--line);border-radius:0 10px 10px 10px;background:var(--surface);padding:18px 20px 6px;margin-bottom:18px}
+.panel[hidden]{display:none}
+.panel .code{background:var(--ground)}
+.note{border-left:3px solid var(--sand);background:color-mix(in srgb,var(--sand) 8%,var(--surface));padding:12px 16px;border-radius:0 8px 8px 0;margin:6px 0 18px;font-size:15px;color:var(--ink-2)}
+.note.warn{border-left-color:var(--warn);background:color-mix(in srgb,var(--warn) 8%,var(--surface))}
+.note p:last-child{margin-bottom:0}
+.flowline{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 18px;padding:0;list-style:none}
+.flowline li{font:500 12.5px/1 var(--mono);padding:8px 11px;border-radius:6px;background:var(--raise);color:var(--ink);margin:0}
+.flowline li + li::before{content:"→";color:var(--ink-3);margin-right:8px}
+.toolgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:6px;margin:8px 0 18px}
+.toolgrid code{display:block;padding:6px 8px;font-size:12.5px}
+footer{border-top:1px solid var(--line);padding-block:30px 44px;color:var(--ink-3);font-size:14px}
+footer .wrap{display:flex;flex-wrap:wrap;gap:12px 32px;justify-content:space-between}
+@media (max-width:760px){
+  .top .wrap{gap:0;min-height:52px;padding-top:8px}
+  nav.links{flex-wrap:nowrap;overflow-x:auto;width:100%;margin:0;padding:2px 0 6px;gap:20px;scrollbar-width:none}
+  nav.links::-webkit-scrollbar{display:none}
+  nav.links a{white-space:nowrap;padding:8px 0}
+  html{scroll-padding-top:100px}
+}
+.lim td:nth-child(2){color:var(--warn);font-weight:500}
+.lim td:nth-child(3){color:var(--ok)}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="index.html"><img src="assets/tellus-logo.png" alt="" width="34" height="34">TELLUS<small>Academic edition</small></a>
+    <nav class="links" aria-label="Site">
+      <a href="index.html">Home</a>
+      <a href="index.html#start">Download</a>
+      <a href="manual.html">Manual</a>
+      <a href="index.html#conditions">Conditions</a>
+      <a href="index.html#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<div class="intro">
+  <div class="wrap">
+    <p class="label">Free academic edition · Tellus 2D 0.1.2</p>
+    <h1 style="margin-top:16px">The free academic edition and its limits</h1>
+    <p class="lede">Tellus 2D runs as the free academic edition when no licence key is entered, so students and teachers can use it without a key, a registration or an internet connection. It is the full program with a few limits on model size, soil models and structures, which are large enough for course exercises and small enough to keep it out of design work. This page lists every limit, explains what happens when a model goes beyond one, and shows how to fit a teaching model inside them.</p>
+    <div class="actions">
+      <a class="btn primary" href="downloads/Tellus-0.1.2-macos-universal.dmg" download>Academic download · macOS</a>
+      <a class="btn primary" href="downloads/Tellus-0.1.2-windows-x64.zip" download>Academic download · Windows</a>
+      <a class="btn" href="index.html#contact">Ask for a licence key</a>
+    </div>
+  </div>
+</div>
+
+<div class="wrap doc">
+  <nav class="toc" aria-label="Contents">
+    <span class="label">Contents</span>
+    <ol>
+      <li><a href="#who">Who it is for</a></li>
+      <li><a href="#limits">The limits</a></li>
+      <li><a href="#same">What is not limited</a></li>
+      <li><a href="#refused">When a model is beyond a limit</a></li>
+      <li><a href="#watermark">Watermark on reports and plots</a></li>
+      <li><a href="#fit">Fitting a model in the limits</a></li>
+      <li><a href="#keys">Licence keys</a></li>
+      <li><a href="#legal">Conditions and disclaimer</a></li>
+    </ol>
+  </nav>
+
+  <article>
+    <section id="who">
+      <p class="label">1</p>
+      <h2>Who it is for</h2>
+      <p>The free academic edition is for students, teachers and researchers at universities, colleges and schools, and for anyone learning the finite element method on their own. It covers teaching, coursework, student exercises and projects, theses, non-commercial research and self-study, wherever in the world you are.</p>
+      <p>It is not for design, consulting, checking or any other paid work for a client or an employer, and its results must not appear in design reports, tender documents or other commercial deliverables. Companies and paid projects need a licence key, and so does commercial work done by a student or a university.</p>
+      <p>You choose the edition at the first start by clicking <strong>Continue with the free academic edition</strong>. Tellus remembers the choice, and the top bar then shows <strong>Free academic edition</strong>, which you can click to see the limits or to enter a key later.</p>
+    </section>
+
+    <section id="limits">
+      <p class="label">2</p>
+      <h2>The limits</h2>
+      <p>The table lists every difference between the free edition and a licensed copy. Tellus checks the limits in one place before every calculation, so they apply in the same way to the Calculate button, to the chat assistant and to an AI assistant connected through MCP.</p>
+      <div class="tablebox"><table class="lim">
+        <tr><th>Item</th><th>Free academic edition</th><th>With a licence key</th></tr>
+        <tr><td>Mesh</td><td>up to 1,000 elements</td><td>no limit</td></tr>
+        <tr><td>Calculation phases</td><td>the initial phase and 2 more</td><td>no limit</td></tr>
+        <tr><td>Soil models</td><td>Linear elastic, Mohr-Coulomb, Soft Soil</td><td>also Hardening Soil, HS small, Soft Soil Creep, Hypoplastic (sand)</td></tr>
+        <tr><td>Plates</td><td>up to 2</td><td>no limit</td></tr>
+        <tr><td>Geogrids</td><td>up to 2</td><td>no limit</td></tr>
+        <tr><td>Struts and anchors</td><td>up to 2 (spring supports)</td><td>no limit</td></tr>
+        <tr><td>Embedded piles</td><td>none</td><td>no limit</td></tr>
+        <tr><td>PLAXIS export</td><td>not available</td><td>available</td></tr>
+        <tr><td>Reports and Output plots</td><td>academic watermark</td><td>no watermark</td></tr>
+      </table></div>
+      <h3>How each limit is counted</h3>
+      <ul>
+        <li><strong>Mesh.</strong> The count is the number of 15-node triangles in the generated mesh, as reported in the log after <strong>Generate mesh</strong>. Tellus meshes the model again before it calculates, so the limit applies to the mesh that would actually be solved.</li>
+        <li><strong>Phases.</strong> Every phase after the initial phase counts, whatever its type, so a Safety (strength reduction) phase or a Consolidation phase uses one of the two.</li>
+        <li><strong>Soil models.</strong> The check looks at every soil material in the project, so a Hardening Soil material that is defined but not used still stops the calculation. Delete it or change its model.</li>
+        <li><strong>Structures.</strong> Plates, geogrids and struts or anchors are counted separately, so a model may have two of each at the same time.</li>
+      </ul>
+    </section>
+
+    <section id="same">
+      <p class="label">3</p>
+      <h2>What is not limited</h2>
+      <p>Everything outside the table above works as in the licensed program. This includes the soil layers, boreholes and drawn soil clusters, the number of materials with the three free soil models, interfaces on plates, loads, water levels and flow conditions, and the Initial phase by the K0 procedure or by Gravity loading. Plastic, Consolidation and Safety phases are all available within the two-phase limit.</p>
+      <p>The free edition also keeps the built-in chat assistant, the MCP server for Claude Code, Claude Desktop and Codex, the command-line options, saving and opening <code>.tellus</code> projects and the PDF report. It needs no internet connection, and it has no time limit, so a student can keep it for a whole degree.</p>
+    </section>
+
+    <section id="refused">
+      <p class="label">4</p>
+      <h2>When a model is beyond a limit</h2>
+      <p>A model that is beyond a limit is still built, edited and saved as usual, and only the calculation is refused. Calculate then names the limit that stops it and the size of the model, for example:</p>
+      <div class="code"><pre>The mesh has 1240 elements; the Free academic edition calculates up to 1000.
+Make the mesh coarser or the model smaller. A licence key lifts this limit:
+write to tellusfem@gmail.com.</pre></div>
+      <p>Tellus checks the soil models first, then the phases, the plates, the geogrids, the struts and anchors, the piles and finally the mesh, so it reports one limit at a time. After you fix it, Calculate may report the next one. The chat assistant and an assistant connected through MCP get the same message, and they are told to report the limit to you rather than try to work around it.</p>
+      <p>A project saved in the free edition opens and calculates unchanged once a licence key is entered, so students who later get a key keep their work.</p>
+    </section>
+
+    <section id="watermark">
+      <p class="label">5</p>
+      <h2>Watermark on reports and plots</h2>
+      <p>Every page of a PDF report from the free edition carries a light diagonal watermark, "Tellus Free Academic Edition - not for commercial use", and a line at the foot of the page that says the report is for teaching and learning only, not for design or commercial work. The plots in Output carry the same watermark text in a corner.</p>
+      <p>The watermark is part of the <a href="index.html#conditions">academic conditions</a>, so it must not be removed, cropped or hidden. A figure from the free edition can go into a thesis, a paper or a presentation with the watermark visible and a citation of Tellus.</p>
+    </section>
+
+    <section id="fit">
+      <p class="label">6</p>
+      <h2>Fitting a model in the limits</h2>
+      <p>Most teaching problems fit in the free edition, because the default model has about 420 elements and a 2 m strip footing on sand over clay calculates with room to spare. When a model is too large, these changes usually bring it within the limits.</p>
+      <ul>
+        <li><strong>Use symmetry.</strong> Model half of a symmetric footing, embankment or excavation, with a roller boundary on the axis, which halves the mesh.</li>
+        <li><strong>Coarsen the mesh.</strong> Make the element size factor larger and generate the mesh again, then read the new element count in the log.</li>
+        <li><strong>Trim the boundaries.</strong> Keep the model wide and deep enough that the boundaries do not change the result, but no larger, because distant soil adds elements without changing the answer.</li>
+        <li><strong>Merge phases.</strong> Combine construction steps that a lesson does not need to separate, so that a typical exercise of initial stresses, one construction phase and one Safety phase uses exactly the two phases allowed.</li>
+        <li><strong>Use the free soil models.</strong> Mohr-Coulomb teaches failure and the factor of safety, and Soft Soil teaches the compression of soft clay, which covers most course work.</li>
+      </ul>
+      <div class="note"><p>A coarser mesh changes the result, so check that the settlement or factor of safety barely changes between two mesh sizes before you rely on it. This mesh study is a good exercise in its own right.</p></div>
+    </section>
+
+    <section id="keys">
+      <p class="label">7</p>
+      <h2>Licence keys</h2>
+      <p>A licence key lifts every limit and removes the watermark. Keys are issued free to university research groups whose work goes beyond the free edition, as trial keys to companies that want to assess Tellus, and as commercial licences for design and consulting.</p>
+      <p>To ask for one, use the <a href="index.html#contact">contact form</a> or write to <a href="mailto:tellusfem@gmail.com">tellusfem@gmail.com</a>. For a research key, write from your university address and name your supervisor or course, and for a trial or commercial key, name your company and the projects you have in mind. Enter the key by clicking <strong>Free academic edition</strong> in the top bar, and activation then needs the internet once.</p>
+    </section>
+
+    <section id="legal">
+      <p class="label">8</p>
+      <h2>Conditions and disclaimer</h2>
+      <p>Downloading, installing or using the free academic edition means that you accept the <a href="index.html#conditions">academic conditions</a> and the <a href="index.html#disclaimer">disclaimer and limitation of liability</a>. In short, the program is research software provided as is, its results must not be used to design or assess any real structure, and you are responsible for checking every result, including the models an AI assistant builds. The conditions are governed by the laws of Thailand, and users in other countries also follow their own local laws.</p>
+    </section>
+  </article>
+</div>
+</main>
+<footer>
+  <div class="wrap">
+    <div><a href="index.html" style="color:var(--sand)">Tellus home</a> · <a href="index.html#conditions" style="color:var(--sand)">Academic conditions</a> · <a href="index.html#disclaimer" style="color:var(--sand)">Disclaimer</a> · <a href="manual.html" style="color:var(--sand)">Manual</a> · <a href="index.html#contact" style="color:var(--sand)">Contact</a></div>
+    <p style="margin:0;max-width:60ch">Tellus is research software. Results depend on the model and its parameters and must be checked by a qualified engineer before they are used in design.</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  // copy buttons: the text of the block named by data-for
+  document.querySelectorAll('.copy').forEach(function(b){
+    b.addEventListener('click', function(){
+      var el = document.getElementById(b.dataset.for), text = el.innerText.trim();
+      function done(){ b.textContent = 'Copied'; setTimeout(function(){ b.textContent = 'Copy'; }, 1500); }
+      function select(){ var r = document.createRange(); r.selectNodeContents(el); var s = getSelection(); s.removeAllRanges(); s.addRange(r); }
+      try { navigator.clipboard.writeText(text).then(done, select); } catch(e){ select(); }
+    });
+  });
+  // assistant tabs
+  var tabs = document.querySelectorAll('[role="tab"]');
+  tabs.forEach(function(t){
+    t.addEventListener('click', function(){
+      tabs.forEach(function(o){ o.setAttribute('aria-selected', o === t ? 'true' : 'false'); document.getElementById(o.getAttribute('aria-controls')).hidden = o !== t; });
+    });
+  });
+  // contents: mark the section in view
+  var links = Array.prototype.slice.call(document.querySelectorAll('.toc a'));
+  if ('IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(es){
+      es.forEach(function(e){ if (e.isIntersecting){ links.forEach(function(a){ a.classList.toggle('on', a.getAttribute('href') === '#' + e.target.id); }); } });
+    }, { rootMargin: '-30% 0px -60% 0px' });
+    document.querySelectorAll('article section').forEach(function(s){ io.observe(s); });
+  }
+})();
+</script>
+</body>
+</html>
